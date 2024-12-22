@@ -16,10 +16,21 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
+                    @if (auth()->user()->club)
+                        <x-nav-link href="{{ route('clubhouse') }}" :active="request()->routeIs('clubhouse')">
+                            {{ __('Klubbhus') }}
+                        </x-nav-link>
+                    @endif
+
                     <!-- Admin Navigation Links -->
                     @if (auth()->user()->isAdmin())
                         <x-nav-link href="{{ route('admin.users') }}" :active="request()->routeIs('admin.users')">
                             {{ __('Användarhantering') }}
+                        </x-nav-link>
+                    @endif
+                    @if (!auth()->user()->club()->exists())
+                        <x-nav-link href="{{ route('choose-club') }}" :active="request()->routeIs('choose-club')">
+                            {{ __('Klubbval') }}
                         </x-nav-link>
                     @endif
                 </div>

@@ -78,23 +78,6 @@ class DatabaseSeeder extends Seeder
             'max_teams' => 16,
         ]);
 
-        // Skapa Division 1
-        $division1North = League::create([
-            'name' => 'Division 1 Norra',
-            'country_code' => 'SE',
-            'level' => 'national',
-            'rank' => 3,
-            'max_teams' => 16,
-        ]);
-
-        $division1South = League::create([
-            'name' => 'Division 1 Södra',
-            'country_code' => 'SE',
-            'level' => 'national',
-            'rank' => 3,
-            'max_teams' => 16,
-        ]);
-
         // Skapa några klubbar för Allsvenskan
         $allsvenskanClubs = [
             ['name' => 'Malmö FF', 'short' => 'MFF', 'stadium' => 'Eleda Stadion', 'capacity' => 24000],
@@ -119,12 +102,25 @@ class DatabaseSeeder extends Seeder
                 'price_vip' => 1000,
             ]);
 
-            Club::create([
+            $club = Club::create([
                 'name' => $clubData['name'],
                 'short_name' => $clubData['short'],
                 'stadium_id' => $stadium->id,
                 'budget' => 50000000,
                 'is_active' => true,
+            ]);
+
+            // Koppla klubben till Allsvenskan med statistik
+            $club->leagues()->attach($allsvenskan->id, [
+                'season_id' => $season->id,
+                'matches_played' => 0,
+                'wins' => 0,
+                'draws' => 0,
+                'losses' => 0,
+                'goals_for' => 0,
+                'goals_against' => 0,
+                'points' => 0,
+                'current_position' => 0,
             ]);
         }
 
@@ -150,12 +146,25 @@ class DatabaseSeeder extends Seeder
                 'price_vip' => 800,
             ]);
 
-            Club::create([
+            $club = Club::create([
                 'name' => $clubData['name'],
                 'short_name' => $clubData['short'],
                 'stadium_id' => $stadium->id,
                 'budget' => 20000000,
                 'is_active' => true,
+            ]);
+
+            // Koppla klubben till Superettan med statistik
+            $club->leagues()->attach($superettan->id, [
+                'season_id' => $season->id,
+                'matches_played' => 0,
+                'wins' => 0,
+                'draws' => 0,
+                'losses' => 0,
+                'goals_for' => 0,
+                'goals_against' => 0,
+                'points' => 0,
+                'current_position' => 0,
             ]);
         }
 

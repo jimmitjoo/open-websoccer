@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Club extends Model
 {
@@ -13,7 +14,6 @@ class Club extends Model
         'short_name',
         'logo_path',
         'budget',
-        'league_id',
         'user_id',
         'stadium_id',
         'is_active'
@@ -31,14 +31,30 @@ class Club extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function league(): BelongsTo
-    {
-        return $this->belongsTo(League::class);
-    }
-
     public function stadium(): BelongsTo
     {
         return $this->belongsTo(Stadium::class);
+    }
+
+    public function leagues(): BelongsToMany
+    {
+        return $this->belongsToMany(League::class, 'league_club_statistics')
+            ->withPivot([
+                'matches_played',
+                'wins',
+                'draws',
+                'losses',
+                'goals_for',
+                'goals_against',
+                'points',
+                'current_position',
+                'highest_position',
+                'lowest_position',
+                'clean_sheets',
+                'failed_to_score',
+                'season_id'
+            ])
+            ->withTimestamps();
     }
 
     public function transactions(): HasMany
