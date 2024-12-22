@@ -9,7 +9,6 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class User extends Authenticatable
 {
@@ -30,8 +29,6 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',
-        'language',
     ];
 
     /**
@@ -60,9 +57,11 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-        'role' => \App\Enums\UserRole::class,
-    ];
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
 }

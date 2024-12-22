@@ -27,23 +27,17 @@ class JetstreamServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure the roles and permissions that are available within the application.
+     * Configure the permissions that are available within the application.
      */
     protected function configurePermissions(): void
     {
         Jetstream::defaultApiTokenPermissions(['read']);
 
-        Jetstream::role('admin', 'Administrator', [
-            'manage-users',
-            'manage-clubs',
-            'manage-leagues',
-            'manage-system',
-        ])->description('Administratörer kan hantera hela systemet.');
-
-        Jetstream::role('manager', 'Manager', [
-            'manage-own-club',
-            'manage-team',
-            'manage-transfers',
-        ])->description('Managers kan hantera sin klubb och lag.');
+        Jetstream::permissions([
+            'create',
+            'read',
+            'update',
+            'delete',
+        ]);
     }
 }
