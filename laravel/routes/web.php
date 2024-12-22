@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserSettingsController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -14,4 +15,15 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::put('/settings', [UserSettingsController::class, 'update'])
+        ->name('user.settings.update');
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/users', function () {
+        return view('admin.users');
+    })->name('admin.users');
 });

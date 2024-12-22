@@ -5,6 +5,9 @@ namespace App\Providers;
 use App\Actions\Jetstream\DeleteUser;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Jetstream\Jetstream;
+use Livewire\Livewire;
+use App\Http\Livewire\Profile\UpdateLanguageForm;
+use App\Http\Livewire\Admin\UserRoleManager;
 
 class JetstreamServiceProvider extends ServiceProvider
 {
@@ -24,6 +27,10 @@ class JetstreamServiceProvider extends ServiceProvider
         $this->configurePermissions();
 
         Jetstream::deleteUsersUsing(DeleteUser::class);
+
+        // Registrera Livewire-komponenten
+        Livewire::component('profile.update-language-form', UpdateLanguageForm::class);
+        Livewire::component('admin.user-role-manager', UserRoleManager::class);
     }
 
     /**
