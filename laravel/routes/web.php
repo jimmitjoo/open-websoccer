@@ -28,6 +28,10 @@ Route::middleware([
         ->name('clubhouse')
         ->middleware('has.club');
 
+    // Visa andra klubbar
+    Route::get('/clubs/{club}', [ClubController::class, 'show'])
+        ->name('clubs.show');
+
     // Liga routes
     Route::get('/leagues/{league}/{season?}', [LeagueController::class, 'show'])
         ->name('leagues.show');

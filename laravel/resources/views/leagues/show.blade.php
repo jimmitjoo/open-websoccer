@@ -94,7 +94,10 @@
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                    {{ $club->name }}
+                                                    <a href="{{ route('clubs.show', $club) }}"
+                                                        class="hover:text-blue-600 dark:hover:text-blue-400">
+                                                        {{ $club->name }}
+                                                    </a>
                                                 </div>
                                             </div>
                                         </td>
