@@ -9,8 +9,9 @@ class NoClubMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if ($request->user()->club()->exists()) {
-            return redirect()->route('dashboard');
+        if ($request->user() && $request->user()->club) {
+            return redirect()->route('dashboard')
+                ->with('error', 'Du har redan en klubb.');
         }
 
         return $next($request);

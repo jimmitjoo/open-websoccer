@@ -8,20 +8,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('contracts', function (Blueprint $table) {
+        Schema::create('club_transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('player_id')->constrained()->cascadeOnDelete();
             $table->foreignId('club_id')->constrained()->cascadeOnDelete();
-            $table->decimal('salary', 12, 2);
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
-            $table->decimal('termination_fee', 12, 2)->nullable();
+            $table->string('description');
+            $table->decimal('amount', 12, 2);
+            $table->enum('type', ['income', 'expense']);
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('contracts');
+        Schema::dropIfExists('club_transactions');
     }
 };

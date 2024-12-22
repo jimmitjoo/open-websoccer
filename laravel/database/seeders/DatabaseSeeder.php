@@ -106,7 +106,6 @@ class DatabaseSeeder extends Seeder
                 'name' => $clubData['name'],
                 'short_name' => $clubData['short'],
                 'stadium_id' => $stadium->id,
-                'budget' => 50000000,
                 'is_active' => true,
             ]);
 
@@ -150,7 +149,6 @@ class DatabaseSeeder extends Seeder
                 'name' => $clubData['name'],
                 'short_name' => $clubData['short'],
                 'stadium_id' => $stadium->id,
-                'budget' => 20000000,
                 'is_active' => true,
             ]);
 

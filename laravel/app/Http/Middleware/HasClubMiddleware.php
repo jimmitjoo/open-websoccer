@@ -9,8 +9,9 @@ class HasClubMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->user()->club()->exists()) {
-            return redirect()->route('choose-club');
+        if (!$request->user() || !$request->user()->club) {
+            return redirect()->route('clubs.create')
+                ->with('error', 'Du måste ha en klubb för att komma åt denna sida.');
         }
 
         return $next($request);

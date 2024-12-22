@@ -14,17 +14,15 @@ class Club extends Model
         'name',
         'short_name',
         'logo_path',
-        'budget',
         'user_id',
         'stadium_id',
-        'is_active'
+        'is_active',
+        'balance'
     ];
 
     protected $casts = [
-        'budget' => 'decimal:2',
-        'income' => 'decimal:2',
-        'expenses' => 'decimal:2',
-        'is_active' => 'boolean'
+        'is_active' => 'boolean',
+        'balance' => 'decimal:2'
     ];
 
     public function user(): BelongsTo
@@ -72,15 +70,13 @@ class Club extends Model
         ]);
 
         if ($type === 'income') {
-            $this->increment('income', $amount);
-            $this->increment('budget', $amount);
+            $this->increment('balance', $amount);
         } else {
-            $this->increment('expenses', $amount);
-            $this->decrement('budget', $amount);
+            $this->decrement('balance', $amount);
         }
     }
 
-    public function players()
+    public function players(): HasMany
     {
         return $this->hasMany(Player::class);
     }
@@ -88,6 +84,46 @@ class Club extends Model
     public function contracts()
     {
         return $this->hasMany(Contract::class);
+    }
+
+    public function canAfford(float $amount): bool
+    {
+        return $this->balance >= $amount;
+    }
+
+    public function charge(float $amount): void
+    {
+        if (!$this->canAfford($amount)) {
+            throw new \Exception('Klubben har inte råd med denna transaktion.');
+        }
+
+        $this->balance -= $amount;
+        $this->save();
+    }
+
+    public function deposit(float $amount): void
+    {
+        $this->balance += $amount;
+        $this->save();
+    }
+
+    public function getIncomeAttribute(): float
+    {
+        return $this->transactions()
+            ->where('type', 'income')
+            ->sum('amount');
+    }
+
+    public function getExpensesAttribute(): float
+    {
+        return $this->transactions()
+            ->where('type', 'expense')
+            ->sum('amount');
+    }
+
+    public function getBudgetAttribute(): float
+    {
+        return $this->balance + $this->income - $this->expenses;
     }
 
     protected static function booted()

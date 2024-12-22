@@ -56,7 +56,6 @@ class PlayerGenerationService
             'start_date' => Carbon::now(),
             'end_date' => Carbon::now()->addYears(rand(2, 4)),
             'salary' => $this->calculateInitialSalary($player),
-            'active' => true
         ]);
     }
 

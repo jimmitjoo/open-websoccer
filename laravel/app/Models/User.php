@@ -10,6 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class User extends Authenticatable
 {
@@ -67,7 +68,19 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return $this->role === Role::ADMIN;
+        $result = $this->role === Role::ADMIN;
+
+        \Log::info('User::isAdmin check', [
+            'user_id' => $this->id,
+            'role' => $this->role,
+            'expected_role' => Role::ADMIN,
+            'is_admin' => $result,
+            'role_comparison' => $this->role . ' === ' . Role::ADMIN,
+            'role_type' => gettype($this->role),
+            'expected_type' => gettype(Role::ADMIN)
+        ]);
+
+        return $result;
     }
 
     public function isManager(): bool

@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
-    const ADMIN = 'admin';
-    const MANAGER = 'manager';
+    public const ADMIN = 'admin';
+    public const MANAGER = 'manager';
     const USER = 'user';
     const GUEST = 'guest';
 

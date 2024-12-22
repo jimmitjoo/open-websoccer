@@ -10,16 +10,17 @@ class Contract extends Model
     protected $fillable = [
         'player_id',
         'club_id',
+        'salary',
         'start_date',
         'end_date',
-        'salary',
-        'active'
+        'termination_fee'
     ];
 
     protected $casts = [
-        'start_date' => 'date',
-        'end_date' => 'date',
-        'active' => 'boolean',
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+        'salary' => 'decimal:2',
+        'termination_fee' => 'decimal:2'
     ];
 
     public function player(): BelongsTo

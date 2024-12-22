@@ -11,16 +11,17 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Registrera våra custom middleware
+        $middleware->validateCsrfTokens(
+            except: [
+                'contracts/*/terminate',
+                'players/*/negotiate'
+            ]
+        );
+
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
-            'no.club' => \App\Http\Middleware\NoClubMiddleware::class,
             'has.club' => \App\Http\Middleware\HasClubMiddleware::class,
-        ]);
-
-        // Lägg till middleware i web-gruppen om det behövs
-        $middleware->web(append: [
-            // ...
+            'no.club' => \App\Http\Middleware\NoClubMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
