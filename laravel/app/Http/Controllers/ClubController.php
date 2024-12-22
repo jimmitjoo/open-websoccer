@@ -24,4 +24,17 @@ class ClubController extends Controller
 
         return view('clubs.show', compact('club', 'isOwnClub'));
     }
+
+    public function squad(Club $club)
+    {
+        $club->load(['players' => function ($query) {
+            $query->with('activeContract')
+                ->orderByRaw("FIELD(position, 'GK', 'DEF', 'MID', 'FWD')")
+                ->orderBy('last_name');
+        }]);
+
+        $isOwnClub = auth()->user()->club?->id === $club->id;
+
+        return view('clubs.squad', compact('club', 'isOwnClub'));
+    }
 }

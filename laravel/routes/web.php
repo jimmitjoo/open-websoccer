@@ -35,6 +35,10 @@ Route::middleware([
     // Liga routes
     Route::get('/leagues/{league}/{season?}', [LeagueController::class, 'show'])
         ->name('leagues.show');
+
+    // Truppvy för klubbar
+    Route::get('/clubs/{club}/squad', [ClubController::class, 'squad'])
+        ->name('clubs.squad');
 });
 
 Route::middleware(['auth'])->group(function () {

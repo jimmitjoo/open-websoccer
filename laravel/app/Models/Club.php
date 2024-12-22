@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Services\PlayerGenerationService;
 
 class Club extends Model
 {
@@ -77,5 +78,22 @@ class Club extends Model
             $this->increment('expenses', $amount);
             $this->decrement('budget', $amount);
         }
+    }
+
+    public function players()
+    {
+        return $this->hasMany(Player::class);
+    }
+
+    public function contracts()
+    {
+        return $this->hasMany(Contract::class);
+    }
+
+    protected static function booted()
+    {
+        static::created(function ($club) {
+            app(PlayerGenerationService::class)->generatePlayersForClub($club);
+        });
     }
 }
