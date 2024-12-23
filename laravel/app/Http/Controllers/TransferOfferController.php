@@ -20,7 +20,7 @@ class TransferOfferController extends Controller
 
     public function store(Request $request, TransferListing $listing)
     {
-        Gate::authorize('bid-on-listed-player', $listing);
+        Gate::authorize('bidOnListedPlayer', $listing);
 
         $validated = $request->validate([
             'amount' => ['required', 'integer', 'min:' . $listing->asking_price]

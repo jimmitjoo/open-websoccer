@@ -26,29 +26,12 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::before(function ($user, $ability) {
-            \Log::info('Global Gate::before', [
-                'user_id' => $user->id,
-                'user_role' => $user->role,
-                'ability' => $ability,
-                'is_admin' => $user->isAdmin()
-            ]);
-
             if ($user->isAdmin()) {
                 \Log::info('Global admin bypass granted');
                 return true;
             }
 
             return null;
-        });
-
-        \Log::info('AuthServiceProvider boot complete', [
-            'registered_policies' => $this->policies,
-            'gates' => Gate::abilities()
-        ]);
-
-
-        Gate::define('bid-on-listed-player', function ($user, TransferListing $listing) {
-            return $user->club?->id !== $listing->player->club_id;
         });
 
         // Definiera Gate för att lista spelare för transfer
