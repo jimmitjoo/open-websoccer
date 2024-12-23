@@ -15,6 +15,18 @@
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    @auth
+                        @if (auth()->user()->club)
+                            <x-nav-link href="{{ route('clubhouse') }}" :active="request()->routeIs('clubhouse')">
+                                {{ __('Min klubb') }}
+                            </x-nav-link>
+                        @else
+                            <x-nav-link href="{{ route('choose-club') }}" :active="request()->routeIs('choose-club')">
+                                {{ __('Välj en klubb') }}
+                            </x-nav-link>
+                        @endif
+                    @endauth
                 </div>
             </div>
 
