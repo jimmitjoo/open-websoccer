@@ -5,9 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Enums\TransferOfferStatus;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 class TransferOffer extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'transfer_listing_id',
         'bidding_club_id',

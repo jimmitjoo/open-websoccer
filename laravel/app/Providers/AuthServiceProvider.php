@@ -47,8 +47,8 @@ class AuthServiceProvider extends ServiceProvider
         ]);
 
 
-        Gate::define('bid-on-player', function ($user, Player $player) {
-            return $user->club?->id !== $player->club_id;
+        Gate::define('bid-on-listed-player', function ($user, TransferListing $listing) {
+            return $user->club?->id !== $listing->player->club_id;
         });
 
         // Definiera Gate för att lista spelare för transfer

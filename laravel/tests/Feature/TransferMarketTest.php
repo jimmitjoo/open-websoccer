@@ -27,14 +27,12 @@ beforeEach(function () {
         'termination_fee' => 50000
     ]);
 
-    // Logga in användaren
     $this->actingAs($this->user);
 });
 
-test('användare kan se sina transfer listings', function () {
-    // Skapa några transfer listings för användaren
+test('a manager can view their own transfer listings', function () {
     $listings = TransferListing::factory(3)->create([
-        'club_id' => $this->club->id,  // Ändrat från team_id till club_id
+        'club_id' => $this->club->id,
         'player_id' => $this->player->id
     ]);
 
@@ -45,17 +43,12 @@ test('användare kan se sina transfer listings', function () {
         ->assertViewHas('listings');
 });
 
-test('användare kan skapa en ny transfer listing', function () {
+test('a manager can list a player for transfer', function () {
 
     $listingData = [
         'player_id' => $this->player->id,
         'asking_price' => 1000000
     ];
-
-    /*
-    Route::post('/transfer-market/players/{player}/list', [TransferMarketController::class, 'listPlayer'])
-        ->name('transfer-market.list-player');
-        */
 
     $response = post(route('transfer-market.list-player', $this->player->id), $listingData);
 
@@ -65,21 +58,20 @@ test('användare kan skapa en ny transfer listing', function () {
 
     $this->assertDatabaseHas('transfer_listings', [
         'player_id' => $this->player->id,
-        'club_id' => $this->club->id,  // Ändrat från team_id till club_id
+        'club_id' => $this->club->id,
         'asking_price' => 1000000,
         'status' => TransferListingStatus::ACTIVE
     ]);
 });
 
-test('användare kan lägga ett bud på en transfer listing', function () {
-    // Skapa en annan användare med lag som äger transfer listing
+test('a manager can make an offer on a transfer listing', function () {
     $sellerUser = User::factory()->create();
-    $sellerClub = Club::factory()->create(['user_id' => $sellerUser->id]); // Ändrat från team till club
-    $listedPlayer = Player::factory()->create(['club_id' => $sellerClub->id]); // Ändrat från team_id till club_id
+    $sellerClub = Club::factory()->create(['user_id' => $sellerUser->id]);
+    $listedPlayer = Player::factory()->create(['club_id' => $sellerClub->id]);
 
     $askingPrice = 1000000;
     $listing = TransferListing::factory()->create([
-        'club_id' => $sellerClub->id,  // Ändrat från team_id till club_id
+        'club_id' => $sellerClub->id,
         'player_id' => $listedPlayer->id,
         'asking_price' => $askingPrice
     ]);
@@ -88,10 +80,6 @@ test('användare kan lägga ett bud på en transfer listing', function () {
         'amount' => $askingPrice + 100000,
         'transfer_listing_id' => $listing->id
     ];
-
-    /* Route::post('/transfer-market/listings/{listing}/offers', [TransferOfferController::class, 'store'])
-        ->name('transfer-offers.store');
-    */
 
     $response = post(route('transfer-offers.store', $listing->id), $offerData);
 
@@ -107,9 +95,9 @@ test('användare kan lägga ett bud på en transfer listing', function () {
     ]);
 });
 
-test('användare kan inte lägga bud på sin egen transfer listing', function () {
+test('a manager cannot make an offer on their own transfer listing', function () {
     $listing = TransferListing::factory()->create([
-        'club_id' => $this->club->id,  // Ändrat från team_id till club_id
+        'club_id' => $this->club->id,
         'player_id' => $this->player->id
     ]);
 
@@ -124,6 +112,58 @@ test('användare kan inte lägga bud på sin egen transfer listing', function ()
 
     $this->assertDatabaseMissing('transfer_offers', [
         'transfer_listing_id' => $listing->id,
-        'bidding_club_id' => $this->club->id  // Ändrat från bidding_team_id till bidding_club_id
+        'bidding_club_id' => $this->club->id
+    ]);
+});
+
+test('a manager can accept an offer on a transfer listing', function () {
+    $listing = TransferListing::factory()->create([
+        'club_id' => $this->club->id,
+        'player_id' => $this->player->id
+    ]);
+    $offer = TransferOffer::factory()->create([
+        'transfer_listing_id' => $listing->id,
+        'bidding_club_id' => $this->club->id
+    ]);
+
+    /*
+    Route::post('/transfer-market/offers/{offer}/accept', [TransferOfferController::class, 'accept'])
+        ->name('transfer-offers.accept');
+        */
+
+    $response = post(route('transfer-offers.accept', $offer->id));
+
+    $response->assertJson([
+        'success' => true,
+    ]);
+});
+
+
+test('a manager can reject an offer on a transfer listing', function () {
+    $listing = TransferListing::factory()->create([
+        'club_id' => $this->club->id,
+        'player_id' => $this->player->id
+    ]);
+    $offer = TransferOffer::factory()->create([
+        'transfer_listing_id' => $listing->id,
+        'bidding_club_id' => $this->club->id
+    ]);
+
+    $response = post(route('transfer-offers.reject', $offer->id));
+
+    $response->assertJson([
+        'success' => true,
+    ]);
+});
+
+test('a manager can withdraw an offer on a transfer listing', function () {
+    $offer = TransferOffer::factory()->create([
+        'bidding_club_id' => $this->club->id
+    ]);
+
+    $response = post(route('transfer-market.offers.withdraw', $offer->id));
+
+    $response->assertJson([
+        'success' => true,
     ]);
 });

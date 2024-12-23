@@ -20,7 +20,7 @@ class TransferOfferController extends Controller
 
     public function store(Request $request, TransferListing $listing)
     {
-        Gate::authorize('bid-on-player', $listing->player);
+        Gate::authorize('bid-on-listed-player', $listing);
 
         $validated = $request->validate([
             'amount' => ['required', 'integer', 'min:' . $listing->asking_price]
@@ -86,12 +86,7 @@ class TransferOfferController extends Controller
 
     public function withdraw(TransferOffer $offer)
     {
-        if ($offer->bidding_club_id !== auth()->user()->club->id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Du kan bara dra tillbaka dina egna bud.'
-            ], 403);
-        }
+        Gate::authorize('withdraw', $offer);
 
         if ($offer->status !== TransferOfferStatus::PENDING) {
             return response()->json([
