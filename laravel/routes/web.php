@@ -6,6 +6,7 @@ use App\Http\Controllers\ClubController;
 use App\Http\Controllers\LeagueController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\ClubFinanceController;
+use App\Http\Controllers\FreeAgentController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -45,6 +46,9 @@ Route::middleware([
     // Klubb-relaterade routes
     Route::get('/clubhouse', [ClubController::class, 'clubhouse'])->name('clubhouse')->middleware('has.club');
     Route::get('/club/finance', [ClubFinanceController::class, 'index'])->name('club.finance')->middleware('has.club');
+
+    Route::get('/free-agents', [FreeAgentController::class, 'index'])->name('free-agents.index');
+    Route::post('/free-agents/{player}/negotiate', [FreeAgentController::class, 'negotiate'])->name('free-agents.negotiate');
 });
 
 Route::middleware(['auth'])->group(function () {

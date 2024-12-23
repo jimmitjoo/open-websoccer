@@ -15,14 +15,28 @@ class ContractService
     public function negotiateNewContract(Player $player, array $data): bool
     {
         try {
+            // Validera kontraktslängd om spelaren har ett aktivt kontrakt
+            if ($player->hasActiveContract()) {
+                $currentRemainingMonths = ceil(Carbon::now()->diffInMonths($player->activeContract->end_date));
+
+                if ($data['duration'] < $currentRemainingMonths) {
+                    throw new \Exception(
+                        "Du kan inte erbjuda ett kortare kontrakt än spelarens nuvarande kontrakt. " .
+                        "Minst {$currentRemainingMonths} månader krävs."
+                    );
+                }
+            }
+
             // Beräkna sannolikheten för att spelaren accepterar
             $acceptanceProbability = $this->calculateAcceptanceProbability($player, $data);
 
             \Log::info('Contract negotiation probability', [
                 'player_id' => $player->id,
+                'club_id' => $player->club_id,
                 'offered_salary' => $data['salary'],
                 'offered_duration' => $data['duration'],
                 'current_salary' => $player->activeContract?->salary,
+                'current_remaining_months' => $player->hasActiveContract() ? Carbon::now()->diffInMonths($player->activeContract->end_date) : 0,
                 'probability' => $acceptanceProbability
             ]);
 
@@ -32,6 +46,14 @@ class ContractService
             if ($accepted) {
                 DB::beginTransaction();
 
+                // Spara spelarens klubbtillhörighet först
+                $player->save();
+
+                \Log::info('Player club_id after save', [
+                    'player_id' => $player->id,
+                    'club_id' => $player->club_id
+                ]);
+
                 // Avsluta eventuellt aktivt kontrakt
                 if ($player->hasActiveContract()) {
                     $player->activeContract->update([
@@ -39,7 +61,7 @@ class ContractService
                     ]);
                 }
 
-                // Skapa det nya kontraktet
+                // Skapa det nya kontraktet genom relationen
                 $contract = $player->contracts()->create([
                     'club_id' => $player->club_id,
                     'salary' => $data['salary'],
@@ -47,8 +69,15 @@ class ContractService
                     'end_date' => Carbon::now()->addMonths($data['duration'])
                 ]);
 
-                // Skapa transaktion för signeringsbonus (om vi vill ha det)
-                $signingBonus = $data['salary'] * 0.1; // 10% av månadslönen som bonus
+                \Log::info('Contract created', [
+                    'contract_id' => $contract->id,
+                    'player_id' => $player->id,
+                    'club_id' => $contract->club_id,
+                    'salary' => $contract->salary
+                ]);
+
+                // Skapa transaktion för signeringsbonus
+                $signingBonus = $data['salary'] * 0.1;
                 $player->club->addTransaction(
                     description: "Signeringsbonus för " . $player->first_name . " " . $player->last_name,
                     amount: $signingBonus,
@@ -60,6 +89,13 @@ class ContractService
 
             return $accepted;
         } catch (\Exception $e) {
+            \Log::error('Contract negotiation error', [
+                'error' => $e->getMessage(),
+                'player_id' => $player->id,
+                'club_id' => $player->club_id ?? null,
+                'trace' => $e->getTraceAsString()
+            ]);
+
             DB::rollBack();
             throw $e;
         }
@@ -160,6 +196,11 @@ class ContractService
             $contract->update([
                 'end_date' => Carbon::now(),
                 'termination_fee' => $terminationCost
+            ]);
+
+            // Ta bort spelarens klubbtillhörighet
+            $contract->player->update([
+                'club_id' => null
             ]);
 
             DB::commit();

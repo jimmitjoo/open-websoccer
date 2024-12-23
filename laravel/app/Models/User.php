@@ -88,7 +88,7 @@ class User extends Authenticatable
         return $this->role === Role::MANAGER;
     }
 
-    public function club(): HasOne
+    public function club()
     {
         return $this->hasOne(Club::class);
     }
