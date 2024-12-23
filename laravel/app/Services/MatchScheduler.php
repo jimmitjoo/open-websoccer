@@ -14,27 +14,25 @@ class MatchScheduler
 {
     public function generateSchedule(League $league, Season $season): void
     {
-        $leagueSeason = $league->seasons()->where('season_id', $season->id)->firstOrFail();
-
+        // Hämta alla aktiva klubbar i ligan för denna säsong
         $clubs = $league->clubs()
             ->wherePivot('season_id', $season->id)
             ->get();
 
-        if ($clubs->count() < 2) {
-            throw new \RuntimeException("Liga {$league->name} har för få lag för att generera schema.");
-        }
+        $teamIds = $clubs->pluck('id')->toArray();
 
-        // Skapa matchschema (alla möter alla, hem och borta)
-        $rounds = $this->generateRoundRobinSchedule($clubs->pluck('id')->toArray());
+        // Generera matchschema
+        $rounds = $this->generateRoundRobinSchedule($teamIds);
 
-        // Beräkna datum för matcherna
+        // Generera matchdatum
         $matchDates = $this->calculateMatchDates($season, count($rounds));
 
         // Skapa matcherna
         foreach ($rounds as $matchday => $fixtures) {
             foreach ($fixtures as $fixture) {
                 Game::create([
-                    'league_season_id' => $leagueSeason->id,
+                    'league_id' => $league->id,
+                    'season_id' => $season->id,
                     'home_club_id' => $fixture[0],
                     'away_club_id' => $fixture[1],
                     'stadium_id' => $this->getHomeStadium($fixture[0]),
