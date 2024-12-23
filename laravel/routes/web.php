@@ -37,13 +37,17 @@ Route::middleware([
     Route::get('/clubs/{club}', [ClubController::class, 'show'])
         ->name('clubs.show');
 
-    // Liga routes
-    Route::get('/leagues/{league}/{season?}', [LeagueController::class, 'show'])
-        ->name('leagues.show');
+    // Klubbens matcher
+    Route::get('/clubs/{club}/matches', [ClubController::class, 'matches'])
+        ->name('clubs.matches');
 
     // Truppvy för klubbar
     Route::get('/clubs/{club}/squad', [ClubController::class, 'squad'])
         ->name('clubs.squad');
+
+    // Liga routes
+    Route::get('/leagues/{league}/{season?}', [LeagueController::class, 'show'])
+        ->name('leagues.show');
 
     // Klubb-relaterade routes
     Route::get('/clubhouse', [ClubController::class, 'clubhouse'])->name('clubhouse')->middleware('has.club');

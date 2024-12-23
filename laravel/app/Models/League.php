@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class League extends Model
 {
@@ -31,6 +32,11 @@ class League extends Model
         return $this->belongsToMany(Season::class)
             ->withPivot(['start_date', 'end_date', 'is_completed'])
             ->withTimestamps();
+    }
+
+    public function matches(): HasMany
+    {
+        return $this->hasMany(Game::class);
     }
 
     public function clubs(): BelongsToMany

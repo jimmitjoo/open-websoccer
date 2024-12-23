@@ -35,6 +35,16 @@
             Trupp
         </a>
 
+        <a href="{{ route('clubs.matches', $club) }}" @class([
+            'border-b-2 py-4 px-1 text-sm font-medium',
+            'border-indigo-500 text-indigo-600 dark:text-indigo-400' =>
+                $currentPage === 'matches',
+            'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300' =>
+                $currentPage !== 'matches',
+        ])>
+            Matcher
+        </a>
+
         @if ($isOwnClub)
             <a href="{{ route('clubhouse') }}" @class([
                 'border-b-2 py-4 px-1 text-sm font-medium',

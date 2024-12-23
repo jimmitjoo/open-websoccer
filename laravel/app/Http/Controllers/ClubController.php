@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Club;
+use App\Models\Season;
+use App\Models\Game;
+use Illuminate\Http\Request;
 
 class ClubController extends Controller
 {
@@ -36,5 +39,44 @@ class ClubController extends Controller
         $isOwnClub = auth()->user()->club?->id === $club->id;
 
         return view('clubs.squad', compact('club', 'isOwnClub'));
+    }
+
+    public function matches(Club $club, Request $request)
+    {
+        $season = Season::find($request->query('season')) ??
+            Season::where('is_active', true)->firstOrFail();
+
+        $seasons = Season::orderBy('start_date', 'desc')->get();
+
+        $playedMatches = Game::where(function($query) use ($club) {
+                $query->where('home_club_id', $club->id)
+                      ->orWhere('away_club_id', $club->id);
+            })
+            ->where('season_id', $season->id)
+            ->where('status', 'completed')
+            ->orderBy('scheduled_at', 'desc')
+            ->with(['homeClub', 'awayClub'])
+            ->get();
+
+        $upcomingMatches = Game::where(function($query) use ($club) {
+                $query->where('home_club_id', $club->id)
+                      ->orWhere('away_club_id', $club->id);
+            })
+            ->where('season_id', $season->id)
+            ->whereIn('status', ['scheduled', 'in_progress'])
+            ->orderBy('scheduled_at', 'asc')
+            ->with(['homeClub', 'awayClub'])
+            ->get();
+
+        $isOwnClub = auth()->check() && $club->user_id === auth()->id();
+
+        return view('clubs.matches', compact(
+            'club',
+            'season',
+            'seasons',
+            'playedMatches',
+            'upcomingMatches',
+            'isOwnClub'
+        ));
     }
 }
