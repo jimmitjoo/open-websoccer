@@ -22,6 +22,9 @@ class Kernel extends ConsoleKernel
                 ->daily()
                 ->at('00:00')
                 ->runInBackground();
+        $schedule->command('matches:simulate')
+            ->everyMinute()
+            ->withoutOverlapping();
     }
 
     /**
