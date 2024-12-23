@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Role;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreLeagueRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->role === 'admin';
+        return $this->user()->role === Role::ADMIN;
     }
 
     public function rules(): array

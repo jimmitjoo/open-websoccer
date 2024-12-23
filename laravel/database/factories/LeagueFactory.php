@@ -24,7 +24,7 @@ class LeagueFactory extends Factory
             'has_promotion' => false,
             'is_active' => true,
             'country_code' => 'SE',
-            'level' => 1,
+            'level' => 'national',
         ];
     }
 }

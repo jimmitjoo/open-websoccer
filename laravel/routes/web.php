@@ -63,11 +63,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
             return view('admin.users');
         })->name('users');
 
-        Route::resource('leagues', AdminLeagueController::class);
-        Route::resource('seasons', SeasonController::class);
-
-        Route::post('leagues/{league}/clubs', [LeagueClubController::class, 'store'])
-            ->name('leagues.clubs.store');
+        Route::resource('leagues', AdminLeagueController::class)->names('leagues');
+        Route::resource('seasons', SeasonController::class)->names('seasons');
     });
 });
 
