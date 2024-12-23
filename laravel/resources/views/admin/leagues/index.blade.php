@@ -55,6 +55,10 @@
                                         {{ $league->seasons->count() }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                        <a href="{{ route('admin.leagues.show', $league) }}"
+                                            class="text-blue-600 hover:text-blue-900 mr-4">
+                                            {{ __('Visa') }}
+                                        </a>
                                         <a href="{{ route('admin.leagues.edit', $league) }}"
                                             class="text-indigo-600 hover:text-indigo-900 mr-4">
                                             {{ __('Redigera') }}
