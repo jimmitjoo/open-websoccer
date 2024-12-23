@@ -20,12 +20,7 @@ class TransferOfferController extends Controller
 
     public function store(Request $request, TransferListing $listing)
     {
-        if ($listing->club_id === auth()->user()->club->id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Du kan inte buda på din egen spelare.'
-            ], 422);
-        }
+        Gate::authorize('bid-on-player', $listing->player);
 
         $validated = $request->validate([
             'amount' => ['required', 'integer', 'min:' . $listing->asking_price]

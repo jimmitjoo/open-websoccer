@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Enums\TransferListingStatus;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TransferListing extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'player_id',
         'club_id',

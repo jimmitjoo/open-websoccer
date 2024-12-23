@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Services\PlayerGenerationService;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Club extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'name',
         'short_name',
