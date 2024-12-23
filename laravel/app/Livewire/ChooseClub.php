@@ -6,6 +6,7 @@ use App\Models\Club;
 use App\Models\League;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Gate;
 
 class ChooseClub extends Component
 {
