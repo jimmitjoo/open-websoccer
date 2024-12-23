@@ -7,6 +7,8 @@ use App\Http\Controllers\LeagueController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\ClubFinanceController;
 use App\Http\Controllers\FreeAgentController;
+use App\Http\Controllers\Admin\LeagueController as AdminLeagueController;
+use App\Http\Controllers\Admin\SeasonController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -57,9 +59,17 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin/users', function () {
-        return view('admin.users');
-    })->name('admin.users');
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/users', function () {
+            return view('admin.users');
+        })->name('users');
+
+        Route::resource('leagues', AdminLeagueController::class);
+        Route::resource('seasons', SeasonController::class);
+
+        Route::post('leagues/{league}/clubs', [LeagueClubController::class, 'store'])
+            ->name('leagues.clubs.store');
+    });
 });
 
 // Kontraktshantering

@@ -9,8 +9,8 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->user() || !$request->user()->isAdmin()) {
-            abort(403, 'Unauthorized action.');
+        if (!$request->user() || $request->user()->role !== 'admin') {
+            abort(403, 'Endast administratörer har tillgång till denna sida.');
         }
 
         return $next($request);

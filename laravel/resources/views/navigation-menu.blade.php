@@ -31,6 +31,16 @@
                     <x-nav-link href="{{ route('free-agents.index') }}" :active="request()->routeIs('free-agents.index')">
                         {{ __('Free Agents') }}
                     </x-nav-link>
+
+                    @if (auth()->user()->role === 'admin')
+                        <x-nav-link href="{{ route('admin.leagues.index') }}" :active="request()->routeIs('admin.leagues.*')">
+                            {{ __('Hantera Ligor') }}
+                        </x-nav-link>
+
+                        <x-nav-link href="{{ route('admin.seasons.index') }}" :active="request()->routeIs('admin.seasons.*')">
+                            {{ __('Hantera Säsonger') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -131,6 +141,16 @@
             <x-responsive-nav-link href="{{ route('free-agents.index') }}" :active="request()->routeIs('free-agents.index')">
                 {{ __('Free Agents') }}
             </x-responsive-nav-link>
+
+            @if (auth()->user()->role === 'admin')
+                <x-responsive-nav-link href="{{ route('admin.leagues.index') }}" :active="request()->routeIs('admin.leagues.*')">
+                    {{ __('Hantera Ligor') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link href="{{ route('admin.seasons.index') }}" :active="request()->routeIs('admin.seasons.*')">
+                    {{ __('Hantera Säsonger') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
