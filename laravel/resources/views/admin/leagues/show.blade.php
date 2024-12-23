@@ -153,6 +153,13 @@
                             @endif
                         </div>
                     </div>
+
+                    <div class="mt-8">
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
+                            {{ __('Hantera lag') }}
+                        </h3>
+                        <livewire:admin.manage-league-clubs :league="$league" />
+                    </div>
                 </div>
             </div>
         </div>
