@@ -34,7 +34,7 @@ class ClubController extends Controller
     public function show(Club $club)
     {
         $club->load(['leagues', 'stadium']);
-        $isOwnClub = auth()->user()->club?->id === $club->id;
+        $isOwnClub = auth()->user()?->club?->id === $club->id;
 
         $incomingTransfers = TransferHistory::with(['player', 'fromClub'])
             ->where('to_club_id', $club->id)
@@ -59,7 +59,7 @@ class ClubController extends Controller
                 ->orderBy('last_name');
         }]);
 
-        $isOwnClub = auth()->user()->club?->id === $club->id;
+        $isOwnClub = auth()->user()?->club?->id === $club->id;
 
         return view('clubs.squad', compact('club', 'isOwnClub'));
     }

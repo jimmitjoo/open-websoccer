@@ -17,7 +17,7 @@
                     </x-nav-link>
 
                     @auth
-                        @if (auth()->user()->club)
+                        @if (auth()->user()?->club)
                             <x-nav-link href="{{ route('clubhouse') }}" :active="request()->routeIs('clubhouse')">
                                 {{ __('Min klubb') }}
                             </x-nav-link>
@@ -33,7 +33,7 @@
                     </x-nav-link>
 
                     @auth
-                        @if (auth()->user()->club)
+                        @if (auth()->user()?->club)
                             <x-nav-link href="{{ route('transfer-market.index') }}" :active="request()->routeIs('transfer-market.index')">
                                 {{ __('Transfermarknad') }}
                             </x-nav-link>
@@ -43,7 +43,7 @@
                         @endif
                     @endauth
 
-                    @if (auth()->user()->role === 'admin')
+                    @if (auth()->user()?->role === 'admin')
                         <x-nav-link href="{{ route('admin.leagues.index') }}" :active="request()->routeIs('admin.leagues.*')">
                             {{ __('Hantera Ligor') }}
                         </x-nav-link>
@@ -60,17 +60,17 @@
                 <div class="hidden sm:flex sm:items-center sm:ms-6">
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
-                            @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
+                            @if (Laravel\Jetstream\Jetstream::managesProfilePhotos() && Auth::user())
                                 <button
                                     class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
                                     <img class="size-8 rounded-full object-cover"
                                         src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
                                 </button>
-                            @else
+                            @elseif (Auth::user())
                                 <span class="inline-flex rounded-md">
                                     <button type="button"
                                         class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-700 active:bg-gray-50 dark:active:bg-gray-700 transition ease-in-out duration-150">
-                                        {{ Auth::user()->name }}
+                                        {{ Auth::user()?->name }}
 
                                         <svg class="ms-2 -me-0.5 size-4" xmlns="http://www.w3.org/2000/svg"
                                             fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -138,7 +138,7 @@
             </x-responsive-nav-link>
 
             @auth
-                @if (auth()->user()->club)
+                @if (auth()->user()?->club)
                     <x-responsive-nav-link href="{{ route('clubhouse') }}" :active="request()->routeIs('clubhouse')">
                         {{ __('Min klubb') }}
                     </x-responsive-nav-link>
@@ -154,7 +154,7 @@
             </x-responsive-nav-link>
 
             @auth
-                @if (auth()->user()->club)
+                @if (auth()->user()?->club)
                     <x-responsive-nav-link href="{{ route('transfer-market.index') }}" :active="request()->routeIs('transfer-market.index')">
                         {{ __('Transfermarknad') }}
                     </x-responsive-nav-link>
@@ -164,7 +164,7 @@
                 @endif
             @endauth
 
-            @if (auth()->user()->role === 'admin')
+            @if (auth()->user()?->role === 'admin')
                 <x-responsive-nav-link href="{{ route('admin.leagues.index') }}" :active="request()->routeIs('admin.leagues.*')">
                     {{ __('Hantera Ligor') }}
                 </x-responsive-nav-link>
@@ -176,41 +176,43 @@
         </div>
 
         <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="flex items-center px-4">
-                @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
-                    <div class="shrink-0 me-3">
-                        <img class="h-10 w-10 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}"
-                            alt="{{ Auth::user()->name }}" />
-                    </div>
-                @endif
+        @auth
+            <div class="pt-4 pb-1 border-t border-gray-200">
+                <div class="flex items-center px-4">
+                    @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
+                        <div class="shrink-0 me-3">
+                            <img class="h-10 w-10 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}"
+                                alt="{{ Auth::user()->name }}" />
+                        </div>
+                    @endif
 
-                <div>
-                    <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                    <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                    <div>
+                        <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
+                        <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                    </div>
+                </div>
+
+                <div class="mt-3 space-y-1">
+                    <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
+                        {{ __('Profile') }}
+                    </x-responsive-nav-link>
+
+                    @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
+                        <x-responsive-nav-link href="{{ route('api-tokens.index') }}" :active="request()->routeIs('api-tokens.index')">
+                            {{ __('API Tokens') }}
+                        </x-responsive-nav-link>
+                    @endif
+
+                    <!-- Authentication -->
+                    <form method="POST" action="{{ route('logout') }}" x-data>
+                        @csrf
+
+                        <x-responsive-nav-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
+                            {{ __('Log Out') }}
+                        </x-responsive-nav-link>
+                    </form>
                 </div>
             </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
-                    <x-responsive-nav-link href="{{ route('api-tokens.index') }}" :active="request()->routeIs('api-tokens.index')">
-                        {{ __('API Tokens') }}
-                    </x-responsive-nav-link>
-                @endif
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}" x-data>
-                    @csrf
-
-                    <x-responsive-nav-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
-            </div>
-        </div>
+        @endauth
     </div>
 </nav>
