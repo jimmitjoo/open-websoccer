@@ -19,14 +19,14 @@ Route::get('/', function () {
 // Public club routes
 Route::get('/clubs/{club}', [ClubController::class, 'show'])
     ->name('clubs.show');
-
-// Klubbens matcher
 Route::get('/clubs/{club}/matches', [ClubController::class, 'matches'])
     ->name('clubs.matches');
-
-// Truppvy för klubbar
 Route::get('/clubs/{club}/squad', [ClubController::class, 'squad'])
     ->name('clubs.squad');
+
+// Public league routes
+Route::get('/leagues/{league}/{season?}', [LeagueController::class, 'show'])
+    ->name('leagues.show');
 
 Route::middleware([
     'auth:sanctum',
@@ -44,10 +44,6 @@ Route::middleware([
 
     Route::post('/become-manager', [ClubController::class, 'becomeManager'])
         ->name('become-manager');
-
-    // Liga routes
-    Route::get('/leagues/{league}/{season?}', [LeagueController::class, 'show'])
-        ->name('leagues.show');
 
     Route::get('/free-agents', [FreeAgentController::class, 'index'])
         ->name('free-agents.index');
