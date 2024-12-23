@@ -77,4 +77,10 @@ class Player extends Model
             ->where('end_date', '<', now())
             ->orderBy('end_date', 'desc');
     }
+
+    public function transferListing()
+    {
+        return $this->hasOne(TransferListing::class)
+            ->where('status', 'active');
+    }
 }

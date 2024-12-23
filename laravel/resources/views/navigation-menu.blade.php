@@ -32,6 +32,17 @@
                         {{ __('Free Agents') }}
                     </x-nav-link>
 
+                    @auth
+                        @if (auth()->user()->club)
+                            <x-nav-link href="{{ route('transfer-market.index') }}" :active="request()->routeIs('transfer-market.index')">
+                                {{ __('Transfermarknad') }}
+                            </x-nav-link>
+                            <x-nav-link href="{{ route('transfer-market.my-listings') }}" :active="request()->routeIs('transfer-market.my-listings')">
+                                {{ __('Mina listings') }}
+                            </x-nav-link>
+                        @endif
+                    @endauth
+
                     @if (auth()->user()->role === 'admin')
                         <x-nav-link href="{{ route('admin.leagues.index') }}" :active="request()->routeIs('admin.leagues.*')">
                             {{ __('Hantera Ligor') }}
@@ -141,6 +152,17 @@
             <x-responsive-nav-link href="{{ route('free-agents.index') }}" :active="request()->routeIs('free-agents.index')">
                 {{ __('Free Agents') }}
             </x-responsive-nav-link>
+
+            @auth
+                @if (auth()->user()->club)
+                    <x-responsive-nav-link href="{{ route('transfer-market.index') }}" :active="request()->routeIs('transfer-market.index')">
+                        {{ __('Transfermarknad') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link href="{{ route('transfer-market.my-listings') }}" :active="request()->routeIs('transfer-market.my-listings')">
+                        {{ __('Mina listings') }}
+                    </x-responsive-nav-link>
+                @endif
+            @endauth
 
             @if (auth()->user()->role === 'admin')
                 <x-responsive-nav-link href="{{ route('admin.leagues.index') }}" :active="request()->routeIs('admin.leagues.*')">

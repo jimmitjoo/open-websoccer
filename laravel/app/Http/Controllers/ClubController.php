@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Club;
 use App\Models\Season;
 use App\Models\Game;
+use App\Models\TransferHistory;
 use Illuminate\Http\Request;
 
 class ClubController extends Controller
@@ -25,7 +26,19 @@ class ClubController extends Controller
         $club->load(['leagues', 'stadium']);
         $isOwnClub = auth()->user()->club?->id === $club->id;
 
-        return view('clubs.show', compact('club', 'isOwnClub'));
+        $incomingTransfers = TransferHistory::with(['player', 'fromClub'])
+            ->where('to_club_id', $club->id)
+            ->where('type', 'transfer')
+            ->orderByDesc('created_at')
+            ->get();
+
+        $outgoingTransfers = TransferHistory::with(['player', 'toClub'])
+            ->where('from_club_id', $club->id)
+            ->where('type', 'transfer')
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('clubs.show', compact('club', 'isOwnClub', 'incomingTransfers', 'outgoingTransfers'));
     }
 
     public function squad(Club $club)

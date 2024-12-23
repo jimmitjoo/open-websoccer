@@ -62,6 +62,14 @@
                                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                                                 <td class="px-4 py-2">
                                                     {{ $player->first_name }} {{ $player->last_name }}
+                                                    @if ($player->transferListing)
+                                                        <span
+                                                            class="ml-2 px-2 py-0.5 text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100 rounded-full">
+                                                            Till salu:
+                                                            {{ number_format($player->transferListing->asking_price) }}
+                                                            kr
+                                                        </span>
+                                                    @endif
                                                 </td>
                                                 <td class="px-4 py-2">{{ $player->birth_date->age }}</td>
                                                 @if ($isOwnClub)
@@ -86,6 +94,19 @@
                                                                     class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">
                                                                     Bryt kontrakt
                                                                 </button>
+                                                                @if ($player->transferListing)
+                                                                    <button
+                                                                        onclick="cancelTransferListing({{ $player->transferListing->id }})"
+                                                                        class="text-xs bg-gray-500 text-white px-2 py-1 rounded hover:bg-gray-600">
+                                                                        Avbryt listning
+                                                                    </button>
+                                                                @else
+                                                                    <button x-data
+                                                                        @click="$dispatch('open-modal', 'list-player-modal'); window.currentPlayerId = {{ $player->id }}"
+                                                                        class="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">
+                                                                        Lista för transfer
+                                                                    </button>
+                                                                @endif
                                                             </div>
                                                         @else
                                                             <span class="text-red-600 dark:text-red-400">Inget aktivt
@@ -226,6 +247,31 @@
         </div>
     </div>
 
+    <x-modal name="list-player-modal" :show="false">
+        <form class="p-6" id="listPlayerForm">
+            @csrf
+            <h2 class="text-lg font-medium text-gray-900 mb-4">
+                Lista spelare för transfer
+            </h2>
+
+            <div class="mb-4">
+                <x-input-label for="asking_price" value="Utgångspris (kr)" />
+                <x-text-input id="asking_price" type="number" name="asking_price" class="mt-1 block w-full" required
+                    min="1000" />
+                <p class="mt-2 text-sm text-gray-500">Minimum 1000 kr</p>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <x-secondary-button @click="$dispatch('close')" class="mr-3">
+                    Avbryt
+                </x-secondary-button>
+                <x-primary-button type="submit">
+                    Lista spelare
+                </x-primary-button>
+            </div>
+        </form>
+    </x-modal>
+
     @push('scripts')
         <script>
             let currentPlayerId = null;
@@ -313,6 +359,63 @@
                     closeNegotiateModal();
                 }
             });
+
+            function listPlayerForTransfer(playerId) {
+                currentPlayerId = playerId;
+                $dispatch('open-modal', 'list-player-modal');
+            }
+
+            document.getElementById('listPlayerForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                try {
+                    const response = await fetch(`/transfer-market/players/${window.currentPlayerId}/list`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify({
+                            asking_price: document.getElementById('asking_price').value
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        window.location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                } catch (error) {
+                    alert('Ett fel uppstod vid listning av spelaren.');
+                }
+            });
+
+            function cancelTransferListing(listingId) {
+                if (confirm('Är du säker på att du vill ta bort spelaren från transfermarknaden?')) {
+                    fetch(`/transfer-market/listings/${listingId}/cancel`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                'Accept': 'application/json'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                window.location.reload();
+                            } else {
+                                alert(data.message || 'Ett fel uppstod');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Ett fel uppstod');
+                        });
+                }
+            }
         </script>
     @endpush
 </x-app-layout>

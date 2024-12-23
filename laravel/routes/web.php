@@ -9,6 +9,8 @@ use App\Http\Controllers\ClubFinanceController;
 use App\Http\Controllers\FreeAgentController;
 use App\Http\Controllers\Admin\LeagueController as AdminLeagueController;
 use App\Http\Controllers\Admin\SeasonController;
+use App\Http\Controllers\TransferMarketController;
+use App\Http\Controllers\TransferOfferController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -83,4 +85,31 @@ Route::middleware(['auth', 'has.club'])->group(function () {
     Route::post('/contracts/{contract}/terminate', [ContractController::class, 'terminate'])
         ->name('contracts.terminate');
     Route::get('/clubfinance', [ClubFinanceController::class, 'index'])->name('club.finance');
+});
+
+// Transfer Market Routes
+Route::middleware(['auth', 'has.club'])->group(function () {
+    Route::get('/transfer-market', [TransferMarketController::class, 'index'])
+        ->name('transfer-market.index');
+
+    Route::post('/transfer-market/players/{player}/list', [TransferMarketController::class, 'listPlayer'])
+        ->name('transfer-market.list-player');
+
+    Route::post('/transfer-market/listings/{listing}/offers', [TransferOfferController::class, 'store'])
+        ->name('transfer-offers.store');
+
+    Route::post('/transfer-market/offers/{offer}/accept', [TransferOfferController::class, 'accept'])
+        ->name('transfer-offers.accept');
+
+    Route::post('/transfer-market/offers/{offer}/reject', [TransferOfferController::class, 'reject'])
+        ->name('transfer-offers.reject');
+
+    Route::post('/transfer-market/listings/{listing}/cancel', [TransferMarketController::class, 'cancelListing'])
+        ->name('transfer-market.cancel-listing');
+
+    Route::get('/transfer-market/my-listings', [TransferMarketController::class, 'myListings'])
+        ->name('transfer-market.my-listings');
+
+    Route::post('/transfer-market/offers/{offer}/withdraw', [TransferOfferController::class, 'withdraw'])
+        ->name('transfer-market.offers.withdraw');
 });

@@ -138,4 +138,100 @@
             </div>
         </div>
     </div>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg mt-6">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">Transferhistorik</h3>
+
+                    <div class="mb-8">
+                        <h4 class="text-md font-semibold mb-3 text-gray-800 dark:text-gray-200">Ingående transfers</h4>
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead>
+                                <tr>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Spelare</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Från klubb</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Summa</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Datum</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                                @forelse($incomingTransfers as $transfer)
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $transfer->player->first_name }}
+                                            {{ $transfer->player->last_name }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $transfer->fromClub->name }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ number_format($transfer->fee) }} kr
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            {{ $transfer->created_at->format('Y-m-d') }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4"
+                                            class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                                            Inga ingående transfers
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div>
+                        <h4 class="text-md font-semibold mb-3 text-gray-800 dark:text-gray-200">Utgående transfers</h4>
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead>
+                                <tr>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Spelare</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Till klubb</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Summa</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        Datum</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                                @forelse($outgoingTransfers as $transfer)
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $transfer->player->first_name }}
+                                            {{ $transfer->player->last_name }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $transfer->toClub->name }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ number_format($transfer->fee) }} kr
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            {{ $transfer->created_at->format('Y-m-d') }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4"
+                                            class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                                            Inga utgående transfers
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </x-app-layout>
