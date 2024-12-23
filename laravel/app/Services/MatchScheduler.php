@@ -97,10 +97,8 @@ class MatchScheduler
 
         $availableDates = [];
         foreach ($period as $date) {
-            // Lägg matcher på lördagar och söndagar
-            if ($date->isWeekend()) {
-                $availableDates[] = $date->copy()->setTime(15, 0);
-            }
+            // Lägg matcher alla dagar i veckan
+            $availableDates[] = $date->copy()->setTime(19, 0);
         }
 
         if (count($availableDates) < $totalRounds) {
@@ -109,8 +107,14 @@ class MatchScheduler
 
         // Fördela jämnt över säsongen
         $stride = floor(count($availableDates) / $totalRounds);
+        $matchDates = [];
 
-        return array_slice($availableDates, 0, $totalRounds, true);
+        for ($i = 0; $i < $totalRounds; $i++) {
+            $index = $i * $stride;
+            $matchDates[] = $availableDates[$index];
+        }
+
+        return $matchDates;
     }
 
     private function getHomeStadium(int $clubId): ?int

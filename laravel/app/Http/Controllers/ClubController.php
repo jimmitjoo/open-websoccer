@@ -36,6 +36,27 @@ class ClubController extends Controller
         $club->load(['leagues', 'stadium']);
         $isOwnClub = auth()->user()?->club?->id === $club->id;
 
+        $lastFiveResults = Game::where(function($query) use ($club) {
+                $query->where('home_club_id', $club->id)
+                      ->orWhere('away_club_id', $club->id);
+            })
+            ->where('status', 'completed')
+            ->orderByDesc('scheduled_at')
+            ->take(5)
+            ->get()
+            ->map(function($game) use ($club) {
+                if ($game->home_club_id === $club->id) {
+                    if ($game->home_score > $game->away_score) return 'W';
+                    if ($game->home_score < $game->away_score) return 'L';
+                    return 'D';
+                } else {
+                    if ($game->away_score > $game->home_score) return 'W';
+                    if ($game->away_score < $game->home_score) return 'L';
+                    return 'D';
+                }
+            })
+            ->toArray();
+
         $incomingTransfers = TransferHistory::with(['player', 'fromClub'])
             ->where('to_club_id', $club->id)
             ->where('type', 'transfer')
@@ -48,7 +69,7 @@ class ClubController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        return view('clubs.show', compact('club', 'isOwnClub', 'incomingTransfers', 'outgoingTransfers'));
+        return view('clubs.show', compact('club', 'isOwnClub', 'incomingTransfers', 'outgoingTransfers', 'lastFiveResults'));
     }
 
     public function squad(Club $club)

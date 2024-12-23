@@ -87,7 +87,7 @@
                             </thead>
                             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 @foreach ($league->clubs as $index => $club)
-                                    <tr class="@if ($club->id === auth()->user()->club?->id) bg-blue-50 dark:bg-blue-900 @endif">
+                                    <tr class="@if ($club->id === auth()->user()?->club?->id) bg-blue-50 dark:bg-blue-900 @endif">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                                             {{ $index + 1 }}
                                         </td>

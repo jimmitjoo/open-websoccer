@@ -90,7 +90,7 @@
                                 <div>
                                     <p class="text-sm text-gray-600 dark:text-gray-400">Senaste 5</p>
                                     <div class="flex gap-1 mt-1">
-                                        @foreach (['W', 'D', 'L', 'W', 'W'] as $result)
+                                        @foreach ($lastFiveResults as $result)
                                             <span @class([
                                                 'w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold',
                                                 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100' =>
