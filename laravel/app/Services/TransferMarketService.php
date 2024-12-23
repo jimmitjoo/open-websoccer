@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\ClubTransaction;
 use App\Models\TransferHistory;
+use App\Enums\TransferOfferStatus;
 
 class TransferMarketService
 {
@@ -49,10 +50,12 @@ class TransferMarketService
             throw new \Exception('Klubben har inte råd med denna transfer.');
         }
 
-        return $listing->offers()->create([
+        return TransferOffer::create([
+            'transfer_listing_id' => $listing->id,
             'bidding_club_id' => $biddingClub->id,
             'amount' => $data['amount'],
-            'status' => 'pending'
+            'status' => TransferOfferStatus::PENDING,
+            'deadline' => now()->addHours(24),
         ]);
     }
 

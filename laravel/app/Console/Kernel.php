@@ -25,6 +25,12 @@ class Kernel extends ConsoleKernel
         $schedule->command('matches:simulate')
             ->everyMinute()
             ->withoutOverlapping();
+        $schedule->command('transfer-listings:handle-expiring')
+                ->hourly()
+                ->withoutOverlapping();
+        $schedule->command('transfer-offers:handle-expiring')
+                ->hourly()
+                ->withoutOverlapping();
     }
 
     /**

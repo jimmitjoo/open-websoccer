@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('player_id')->constrained()->cascadeOnDelete();
             $table->foreignId('club_id')->constrained()->cascadeOnDelete();
             $table->integer('asking_price');
-            $table->enum('status', ['active', 'completed', 'cancelled']);
+            $table->enum('status', ['active', 'completed', 'cancelled', 'expired']);
             $table->timestamp('deadline')->nullable();
             $table->timestamps();
         });
@@ -22,11 +22,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('transfer_listing_id')->constrained()->cascadeOnDelete();
             $table->foreignId('bidding_club_id')->constrained('clubs');
+            $table->timestamp('deadline')->nullable();
             $table->integer('amount');
             $table->foreignId('exchange_player_1_id')->nullable()->constrained('players');
             $table->foreignId('exchange_player_2_id')->nullable()->constrained('players');
             $table->text('message')->nullable();
-            $table->enum('status', ['pending', 'accepted', 'rejected', 'cancelled']);
+            $table->enum('status', ['pending', 'accepted', 'rejected', 'cancelled', 'expired']);
             $table->timestamps();
         });
 

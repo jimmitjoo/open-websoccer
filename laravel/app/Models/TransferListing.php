@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Enums\TransferListingStatus;
 
 class TransferListing extends Model
 {
@@ -18,6 +19,7 @@ class TransferListing extends Model
 
     protected $casts = [
         'deadline' => 'datetime',
+        'status' => TransferListingStatus::class,
     ];
 
     public function player(): BelongsTo

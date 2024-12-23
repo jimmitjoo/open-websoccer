@@ -7,6 +7,7 @@ use App\Models\TransferOffer;
 use App\Services\TransferMarketService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use App\Enums\TransferOfferStatus;
 
 class TransferOfferController extends Controller
 {
@@ -74,7 +75,7 @@ class TransferOfferController extends Controller
         Gate::authorize('reject', $offer);
 
         try {
-            $offer->update(['status' => 'rejected']);
+            $offer->update(['status' => TransferOfferStatus::REJECTED]);
 
             return response()->json([
                 'success' => true,
@@ -97,7 +98,7 @@ class TransferOfferController extends Controller
             ], 403);
         }
 
-        if ($offer->status !== 'pending') {
+        if ($offer->status !== TransferOfferStatus::PENDING) {
             return response()->json([
                 'success' => false,
                 'message' => 'Du kan bara dra tillbaka aktiva bud.'
@@ -105,7 +106,7 @@ class TransferOfferController extends Controller
         }
 
         try {
-            $offer->update(['status' => 'cancelled']);
+            $offer->update(['status' => TransferOfferStatus::CANCELLED]);
 
             return response()->json([
                 'success' => true,

@@ -40,6 +40,7 @@
                                             <div class="mb-2 p-2 border rounded dark:border-gray-700">
                                                 <p>{{ number_format($offer->amount) }} kr från
                                                     {{ $offer->bidderClub->name }}</p>
+                                                <p>Går ut om {{ $offer->deadline->diffForHumans() }}</p>
                                                 <div class="mt-2 flex space-x-2">
                                                     <x-primary-button onclick="acceptOffer({{ $offer->id }})"
                                                         class="px-2 py-1 text-xs">

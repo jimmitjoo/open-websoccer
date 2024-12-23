@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Enums\TransferOfferStatus;
 
 class TransferOffer extends Model
 {
@@ -14,7 +15,13 @@ class TransferOffer extends Model
         'exchange_player_1_id',
         'exchange_player_2_id',
         'message',
-        'status'
+        'status',
+        'deadline'
+    ];
+
+    protected $casts = [
+        'status' => TransferOfferStatus::class,
+        'deadline' => 'datetime',
     ];
 
     public function transferListing(): BelongsTo
