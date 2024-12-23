@@ -6,6 +6,7 @@ use App\Models\Player;
 use App\Models\TransferListing;
 use App\Models\TransferOffer;
 use App\Models\Club;
+use App\Models\Contract;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\ClubTransaction;
@@ -136,7 +137,6 @@ class TransferMarketService
                 'player_id' => $player->id,
                 'from_club_id' => $sellingClub->id,
                 'to_club_id' => $buyingClub->id,
-                'amount' => $offer->amount,
                 'fee' => $offer->amount,
                 'type' => 'transfer',
             ]);
