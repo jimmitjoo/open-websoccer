@@ -100,7 +100,7 @@
                                                 <div>
                                                     @php
                                                         $myOffer = $listing->offers
-                                                            ->where('bidding_club_id', auth()->user()->club_id)
+                                                            ->where('bidding_club_id', auth()->user()->club->id)
                                                             ->where('status', 'pending')
                                                             ->first();
                                                     @endphp

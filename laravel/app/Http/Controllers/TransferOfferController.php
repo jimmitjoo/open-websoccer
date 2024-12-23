@@ -105,7 +105,7 @@ class TransferOfferController extends Controller
         }
 
         try {
-            $offer->update(['status' => 'withdrawn']);
+            $offer->update(['status' => 'cancelled']);
 
             return response()->json([
                 'success' => true,
