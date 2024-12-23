@@ -136,13 +136,17 @@ class ContractService
 
         $increase = ($offeredSalary - $currentSalary) / $currentSalary;
 
-        // Större löneökning = högre sannolikhet
-        if ($increase >= 0.5) return 1.3;  // 50%+ ökning
-        if ($increase >= 0.2) return 1.2;  // 20%+ ökning
-        if ($increase >= 0) return 1.1;    // Någon ökning
-        if ($increase >= -0.1) return 0.9; // Upp till 10% minskning
-        if ($increase >= -0.2) return 0.7; // Upp till 20% minskning
-        return 0.5; // Mer än 20% minskning
+        // Större löne��kning = högre sannolikhet
+        if ($increase >= 0.5) return 1.3;    // 50%+ ökning
+        if ($increase >= 0.2) return 1.2;    // 20%+ ökning
+        if ($increase >= 0.1) return 1.1;    // 10%+ ökning
+        if ($increase >= 0) return 1.0;      // Någon ökning
+
+        // Mycket lägre sannolikhet vid lönesänkning
+        if ($increase >= -0.05) return 0.5;  // Upp till 5% minskning
+        if ($increase >= -0.1) return 0.3;   // Upp till 10% minskning
+        if ($increase >= -0.2) return 0.2;   // Upp till 20% minskning
+        return 0.1;                          // Mer än 20% minskning
     }
 
     private function calculateDurationFactor(int $months): float

@@ -10,7 +10,8 @@
             @if (!auth()->user()->club)
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                     <div class="p-6">
-                        <h2 class="text-xl font-semibold mb-4">{{ __('Välkommen till Manager Pro!') }}</h2>
+                        <h2 class="text-xl font-semibold mb-4">
+                            {{ __('Välkommen till :appname!', ['appname' => config('app.name')]) }}</h2>
                         <p class="mb-4">
                             {{ __('Du har ännu inte valt någon klubb att leda. Börja din managerkarriär genom att välja en klubb.') }}
                         </p>
