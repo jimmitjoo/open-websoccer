@@ -10,7 +10,7 @@ class HasClubMiddleware
     public function handle(Request $request, Closure $next)
     {
         if (!$request->user() || !$request->user()->club) {
-            return redirect()->route('clubs.create')
+            return redirect()->route('choose-club')
                 ->with('error', 'Du måste ha en klubb för att komma åt denna sida.');
         }
 

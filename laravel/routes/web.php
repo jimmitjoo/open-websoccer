@@ -30,10 +30,8 @@ Route::middleware([
         ->name('choose-club')
         ->middleware('no.club');
 
-    // Klubbhus - endast tillgängligt för managers med klubb
-    Route::get('/clubhouse', [ClubController::class, 'clubhouse'])
-        ->name('clubhouse')
-        ->middleware('has.club');
+    Route::post('/become-manager', [ClubController::class, 'becomeManager'])
+        ->name('become-manager');
 
     // Visa andra klubbar
     Route::get('/clubs/{club}', [ClubController::class, 'show'])
@@ -51,12 +49,11 @@ Route::middleware([
     Route::get('/leagues/{league}/{season?}', [LeagueController::class, 'show'])
         ->name('leagues.show');
 
-    // Klubb-relaterade routes
-    Route::get('/clubhouse', [ClubController::class, 'clubhouse'])->name('clubhouse')->middleware('has.club');
-    Route::get('/club/finance', [ClubFinanceController::class, 'index'])->name('club.finance')->middleware('has.club');
+    Route::get('/free-agents', [FreeAgentController::class, 'index'])
+        ->name('free-agents.index');
 
-    Route::get('/free-agents', [FreeAgentController::class, 'index'])->name('free-agents.index');
-    Route::post('/free-agents/{player}/negotiate', [FreeAgentController::class, 'negotiate'])->name('free-agents.negotiate');
+    Route::post('/free-agents/{player}/negotiate', [FreeAgentController::class, 'negotiate'])
+        ->name('free-agents.negotiate');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -78,17 +75,21 @@ Route::middleware(['auth', 'admin'])->group(function () {
     });
 });
 
-// Kontraktshantering
 Route::middleware(['auth', 'has.club'])->group(function () {
+    // Klubb-relaterade routes
+    Route::get('/clubhouse', [ClubController::class, 'clubhouse'])
+        ->name('clubhouse');
+    Route::get('/club/finance', [ClubFinanceController::class, 'index'])
+        ->name('club.finance');
+
+    // Kontraktshantering
     Route::post('/players/{player}/negotiate', [ContractController::class, 'negotiate'])
         ->name('contracts.negotiate');
     Route::post('/contracts/{contract}/terminate', [ContractController::class, 'terminate'])
         ->name('contracts.terminate');
-    Route::get('/clubfinance', [ClubFinanceController::class, 'index'])->name('club.finance');
-});
 
-// Transfer Market Routes
-Route::middleware(['auth', 'has.club'])->group(function () {
+
+    // Transfer Market Routes
     Route::get('/transfer-market', [TransferMarketController::class, 'index'])
         ->name('transfer-market.index');
 

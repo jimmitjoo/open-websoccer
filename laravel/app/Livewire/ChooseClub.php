@@ -50,6 +50,8 @@ class ChooseClub extends Component
 
     public function chooseClub(Club $club)
     {
+        Gate::authorize('becomeManager', $club);
+
         if ($club->user_id) {
             $this->addError('club', 'Denna klubb är tyvärr inte längre tillgänglig.');
             return;

@@ -7,12 +7,22 @@ use App\Models\Season;
 use App\Models\Game;
 use App\Models\TransferHistory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ClubController extends Controller
 {
     public function chooseClub()
     {
         return view('clubs.choose');
+    }
+
+    public function becomeManager(Request $request)
+    {
+        $club = Club::find($request->input('club_id'));
+
+        Gate::authorize('becomeManager', $club);
+
+        $club->update(['user_id' => auth()->id()]);
     }
 
     public function clubhouse()

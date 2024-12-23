@@ -126,11 +126,6 @@ test('a manager can accept an offer on a transfer listing', function () {
         'bidding_club_id' => $this->club->id
     ]);
 
-    /*
-    Route::post('/transfer-market/offers/{offer}/accept', [TransferOfferController::class, 'accept'])
-        ->name('transfer-offers.accept');
-        */
-
     $response = post(route('transfer-offers.accept', $offer->id));
 
     $response->assertJson([
