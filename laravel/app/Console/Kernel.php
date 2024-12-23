@@ -18,6 +18,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('contracts:handle-expiring')->daily();
+        $schedule->command('seasons:ensure-future')
+                ->daily()
+                ->at('00:00')
+                ->runInBackground();
     }
 
     /**
