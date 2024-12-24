@@ -9,6 +9,10 @@
             {{ __('Trupp') }}
         </x-nav-link>
 
+        <x-nav-link href="{{ route('training.index') }}" :active="request()->routeIs('training.*')">
+            {{ __('Träning') }}
+        </x-nav-link>
+
         @if (auth()->user()->club->id === request()->route('club')?->id)
             <x-nav-link href="{{ route('club.finance') }}" :active="request()->routeIs('club.finance')">
                 {{ __('Ekonomi') }}

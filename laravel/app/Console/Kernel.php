@@ -31,6 +31,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('transfer-offers:handle-expiring')
                 ->hourly()
                 ->withoutOverlapping();
+
+        $schedule->command('training:execute')
+            ->dailyAt('03:00')
+            ->appendOutputTo(storage_path('logs/training.log'));
     }
 
     /**

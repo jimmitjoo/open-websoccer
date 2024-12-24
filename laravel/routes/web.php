@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\LeagueController as AdminLeagueController;
 use App\Http\Controllers\Admin\SeasonController;
 use App\Http\Controllers\TransferMarketController;
 use App\Http\Controllers\TransferOfferController;
+use App\Http\Controllers\TrainingController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -106,4 +107,10 @@ Route::middleware(['auth', 'has.club'])->group(function () {
 
     Route::post('/transfer-market/offers/{offer}/withdraw', [TransferOfferController::class, 'withdraw'])
         ->name('transfer-market.offers.withdraw');
+
+    // Träningsrutter
+    Route::get('/training', [TrainingController::class, 'index'])
+        ->name('training.index');
+    Route::post('/training/schedule', [TrainingController::class, 'schedule'])
+        ->name('training.schedule');
 });
