@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\TrainingSession;
 use App\Models\Player;
+use App\Models\TrainingType;
 use Illuminate\Support\Facades\DB;
 
 class TrainingService
@@ -22,14 +23,6 @@ class TrainingService
             // Koppla spelare till träningspasset
             $session->players()->attach($data['player_ids']);
 
-            // Dra kostnaden från klubbens budget
-            $cost = $session->trainingType->cost * count($data['player_ids']);
-            $session->club->addTransaction(
-                description: "Träningskostnad - {$session->trainingType->name}",
-                amount: $cost,
-                type: 'expense'
-            );
-
             return $session;
         });
     }
@@ -39,12 +32,12 @@ class TrainingService
         DB::transaction(function () use ($session) {
             foreach ($session->players as $player) {
                 $effects = $this->calculateTrainingEffects(
-                    $player, 
+                    $player,
                     $session->trainingType
                 );
-                
+
                 $this->applyTrainingEffects($player, $effects);
-                
+
                 // Spara vilka effekter som applicerades
                 $session->players()->updateExistingPivot($player->id, [
                     'effects_applied' => $effects
@@ -58,7 +51,7 @@ class TrainingService
     private function calculateTrainingEffects(Player $player, TrainingType $type): array
     {
         $effects = $type->effects;
-        
+
         // Justera effekter baserat på spelarens tillstånd
         if ($player->is_injured) {
             $effects = $this->adjustEffectsForInjury($effects);
@@ -76,18 +69,28 @@ class TrainingService
     private function applyTrainingEffects(Player $player, array $effects): void
     {
         foreach ($effects as $attribute => $change) {
-            // Avrunda till närmaste heltal
-            $change = round($change);
-            
+
+            if ($player->injured && $change > 0) {
+                $change = round($change * 0.25);
+            } else {
+                $change = round($change);
+            }
+
             // Applicera förändringen om attributet finns
             if (isset($player->$attribute)) {
+
                 $newValue = $player->$attribute + $change;
-                
+
                 // Säkerställ att värdet är inom tillåtet intervall (1-100)
-                $player->$attribute = min(100, max(1, $newValue));
+                $player->$attribute = min(100, max(0, $newValue));
             }
         }
-        
+
+        // Uppdatera spelarens form baserat på träningseffekterna
+        $maxMin = $player->form;
+        $formChange = rand(max(-50, $maxMin), 50);
+        $player->form = min(100, $player->form + $formChange);
+
         $player->save();
     }
 
@@ -99,7 +102,7 @@ class TrainingService
                 $effects[$attribute] = $value * 0.25;
             }
         }
-        
+
         return $effects;
     }
-} 
+}

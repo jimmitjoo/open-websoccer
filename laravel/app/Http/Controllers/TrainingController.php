@@ -9,6 +9,7 @@ use App\Models\TrainingSession;
 use App\Services\TrainingService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Validation\Rule;
 
 class TrainingController extends Controller
 {
@@ -19,7 +20,7 @@ class TrainingController extends Controller
     public function index(Request $request)
     {
         $club = $request->user()->club;
-        
+
         $sessions = TrainingSession::query()
             ->where('club_id', $club->id)
             ->with(['trainingType', 'players'])
@@ -27,7 +28,7 @@ class TrainingController extends Controller
             ->paginate(10);
 
         $trainingTypes = TrainingType::all();
-        
+
         return view('training.index', compact('sessions', 'trainingTypes'));
     }
 
@@ -36,8 +37,14 @@ class TrainingController extends Controller
         $validated = $request->validate([
             'training_type_id' => 'required|exists:training_types,id',
             'date' => 'required|date|after:today',
-            'player_ids' => 'required|array',
-            'player_ids.*' => 'exists:players,id'
+            'player_ids' => [
+                'required',
+                'array',
+                Rule::exists('players', 'id')
+                    ->where(function ($query) use ($request) {
+                        $query->where('club_id', $request->user()->club->id);
+                    })
+            ]
         ]);
 
         $validated['club_id'] = $request->user()->club->id;
@@ -48,4 +55,4 @@ class TrainingController extends Controller
             ->route('training.index')
             ->with('success', 'Träningspass schemalagt!');
     }
-} 
+}

@@ -15,10 +15,10 @@ class TrainingTypeSeeder extends Seeder
                 'code' => 'FR',
                 'effects' => [
                     'stamina' => -2,
-                    'freshness' => 5
+                    'strength' => -1,
+                    'form' => 5
                 ],
-                'intensity' => 1,
-                'cost' => 1000
+                'intensity' => 1
             ],
             [
                 'name' => 'Teknikträning',
@@ -26,20 +26,19 @@ class TrainingTypeSeeder extends Seeder
                 'effects' => [
                     'technique' => 2,
                     'stamina' => -1,
-                    'freshness' => -1
+                    'strength' => -1
                 ],
-                'intensity' => 2,
-                'cost' => 2000
+                'intensity' => 2
             ],
             [
                 'name' => 'Konditionsträning',
                 'code' => 'ST',
                 'effects' => [
                     'stamina' => 3,
-                    'freshness' => -2
+                    'strength' => 1,
+                    'form' => -2
                 ],
-                'intensity' => 3,
-                'cost' => 2000
+                'intensity' => 3
             ],
         ];
 
@@ -47,4 +46,4 @@ class TrainingTypeSeeder extends Seeder
             TrainingType::create($type);
         }
     }
-} 
+}

@@ -41,7 +41,8 @@ class Player extends Model
         'goalkeeper' => 'integer',
         'defense' => 'integer',
         'midfield' => 'integer',
-        'striker' => 'integer'
+        'striker' => 'integer',
+        'injured' => 'boolean'
     ];
 
     public function club(): BelongsTo
