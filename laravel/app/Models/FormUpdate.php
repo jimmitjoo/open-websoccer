@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class FormUpdate extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['player_id', 'old_value', 'new_value', 'adjusted_by', 'reason'];
 
     public function player(): BelongsTo
