@@ -14,7 +14,7 @@ beforeEach(function () {
     $this->injuryService = app(InjuryService::class);
 });
 
-it('kan skapa en skada för en spelare under en match', function () {
+it('can create an injury for a player during a match', function () {
     $player = Player::factory()->create();
     $game = Game::factory()->create();
     $injuryType = InjuryType::factory()->create([
@@ -36,7 +36,7 @@ it('kan skapa en skada för en spelare under en match', function () {
         ->toBeInstanceOf(Carbon::class);
 });
 
-it('kan läka en skada', function () {
+it('can heal an injury', function () {
     $injury = Injury::factory()->create([
         'actual_return_at' => null
     ]);
@@ -48,18 +48,18 @@ it('kan läka en skada', function () {
         ->actual_return_at->toBeInstanceOf(Carbon::class);
 });
 
-it('returnerar rätt skadetyp baserat på slumpmässighet', function () {
-    // Skapa några skadetyper av varje severity
+it('returns the correct injury type based on randomness', function () {
+    // Create some injury types of each severity
     InjuryType::factory()->create(['severity' => 'minor']);
     InjuryType::factory()->create(['severity' => 'moderate']);
     InjuryType::factory()->create(['severity' => 'severe']);
 
-    // Kör många gånger för att testa sannolikhetsfördelningen
+    // Run many times to test the probability distribution
     $results = collect(range(1, 1000))->map(function () {
         return $this->injuryService->getRandomInjuryType()->severity;
     });
 
-    // Kontrollera att fördelningen är ungefär rätt
+    // Check that the distribution is approximately correct
     $minorCount = $results->filter(fn ($s) => $s === 'minor')->count();
     $moderateCount = $results->filter(fn ($s) => $s === 'moderate')->count();
     $severeCount = $results->filter(fn ($s) => $s === 'severe')->count();
@@ -69,7 +69,7 @@ it('returnerar rätt skadetyp baserat på slumpmässighet', function () {
     expect($severeCount)->toBeLessThan(150); // ~10%
 });
 
-it('markerar spelare som skadad när de har en aktiv skada', function () {
+it('marks a player as injured when they have an active injury', function () {
     $player = Player::factory()->create();
 
     expect($player->isInjured())->toBeFalse();
@@ -83,14 +83,14 @@ it('markerar spelare som skadad när de har en aktiv skada', function () {
     expect($player->fresh()->isInjured())->toBeTrue();
 });
 
-it('reducerar träningseffekter för skadade spelare', function () {
+it('reduces training effects for injured players', function () {
     $player = Player::factory()->create();
     $game = Game::factory()->create();
 
-    // Skada spelaren
+    // Injure the player
     $this->injuryService->createMatchInjury($player, $game);
 
-    // Försök träna spelaren
+    // Try to train the player
     $trainingType = TrainingType::factory()->create([
         'effects' => ['stamina' => 10]
     ]);
@@ -104,12 +104,12 @@ it('reducerar träningseffekter för skadade spelare', function () {
     ]);
     $trainingService->executeTraining($trainingSession);
 
-    // Kontrollera att träningseffekten reducerades med 75%
+    // Check that the training effect was reduced by 75%
     expect($player->fresh()->stamina)
         ->toBeLessThanOrEqual(round($player->stamina + (10 * 0.25)));
 });
 
-it('kan ha flera samtidiga skador på olika spelare', function () {
+it('can have multiple injuries on different players', function () {
     $game = Game::factory()->create();
     $players = Player::factory(3)->create();
 

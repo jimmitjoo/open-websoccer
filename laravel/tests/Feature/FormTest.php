@@ -17,7 +17,7 @@ beforeEach(function () {
     ]);
 });
 
-it('uppdaterar form efter match', function () {
+it('update form after match', function () {
     $game = Game::factory()->create();
     $formService = app(FormService::class);
 
@@ -29,7 +29,7 @@ it('uppdaterar form efter match', function () {
         ->form_trend->toBeGreaterThan(0);
 });
 
-it('minskar form över tid för spelare med negativ trend', function () {
+it('decreases form over time for players with negative trend', function () {
     $this->player->update([
         'form_trend' => -2.0,
         'last_form_update' => now()->subDays(1)
@@ -45,7 +45,7 @@ it('minskar form över tid för spelare med negativ trend', function () {
         ->form_trend->toBeGreaterThan(-2.0); // Trenden ska ha minskat
 });
 
-it('tillåter admin att justera form manuellt', function () {
+it('allows admin to adjust form manually', function () {
     $admin = User::factory()->create(['role' => 'admin']);
 
     Livewire::actingAs($admin)
@@ -64,8 +64,8 @@ it('tillåter admin att justera form manuellt', function () {
         ->adjusted_by->toBe($admin->id);
 });
 
-it('visar formhistorik i kronologisk ordning', function () {
-    // Skapa några formuppdateringar
+it('shows form history in chronological order', function () {
+    // Create some form updates
     FormUpdate::factory()->create([
         'player_id' => $this->player->id,
         'old_value' => 50,
@@ -85,7 +85,7 @@ it('visar formhistorik i kronologisk ordning', function () {
         ->assertSee('60 → 55');
 });
 
-it('begränsar form till mellan 1 och 100', function () {
+it('limits form to between 1 and 100', function () {
     $formService = app(FormService::class);
     $game = Game::factory()->create();
 
@@ -100,7 +100,7 @@ it('begränsar form till mellan 1 och 100', function () {
     expect($this->player->fresh()->form)->toBeGreaterThanOrEqual(1);
 });
 
-it('ökar matches_played_recently efter match', function () {
+it('increases matches_played_recently after match', function () {
     $game = Game::factory()->create();
     $formService = app(FormService::class);
 
@@ -111,7 +111,7 @@ it('ökar matches_played_recently efter match', function () {
     expect($this->player->fresh()->matches_played_recently)->toBe(1);
 });
 
-it('minskar matches_played_recently över tid', function () {
+it('decreases matches_played_recently over time', function () {
     $this->player->update([
         'matches_played_recently' => 3,
         'last_form_update' => now()->subDays(7)

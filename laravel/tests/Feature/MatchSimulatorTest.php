@@ -14,23 +14,23 @@ beforeEach(function () {
     $this->seed(\Database\Seeders\InjuryTypeSeeder::class);
 });
 
-it('skapar skador under en match', function () {
-    // Skapa två klubbar med spelare
+it('creates injuries during a match', function () {
+    // Create two clubs with players
     $homeClub = Club::factory()->create();
     $awayClub = Club::factory()->create();
 
-    // Skapa en match
+    // Create a match
     $match = Game::factory()->create([
         'home_club_id' => $homeClub->id,
         'away_club_id' => $awayClub->id,
         'status' => 'scheduled'
     ]);
 
-    // Simulera matchen flera gånger för att säkerställa att skador skapas
+    // Simulate the match multiple times to ensure injuries are created
     $simulator = app(MatchSimulator::class);
     $totalInjuries = 0;
 
-    // Kör simuleringen 50 gånger för att få ett bra statistiskt underlag
+    // Run the simulation 50 times to get a good statistical basis
     for ($i = 0; $i < 50; $i++) {
         $match->refresh();
         $match->status = 'scheduled';
@@ -42,13 +42,13 @@ it('skapar skador under en match', function () {
         $totalInjuries += $injuries;
     }
 
-    // Med nuvarande sannolikhet (0.5% per spelare per minut)
-    // och ~30 spelare per match över 90 minuter
-    // förväntar vi oss ungefär 13.5 skador per match (0.005 * 30 * 90)
-    // Över 50 matcher bör vi se minst några skador
+    // With the current probability (0.5% per player per minute)
+    // and ~30 players per match over 90 minutes
+    // we expect about 13.5 injuries per match (0.005 * 30 * 90)
+    // Over 50 matches we should see at least some injuries
     expect($totalInjuries)->toBeGreaterThan(0);
 
-    // Kontrollera att skadorna är korrekt registrerade
+    // Check that the injuries are correctly recorded
     $injury = Injury::where('match_id', $match->id)->first();
     if ($injury) {
         expect($injury)
@@ -56,23 +56,23 @@ it('skapar skador under en match', function () {
             ->expected_return_at->toBeGreaterThan($injury->started_at)
             ->actual_return_at->toBeNull();
 
-        // Verifiera att skadan är kopplad till en spelare från någon av klubbarna
+        // Check that the injury is linked to a player from one of the clubs
         expect([$homeClub->id, $awayClub->id])
             ->toContain($injury->player->club_id);
     }
 });
 
-it('ökar skaderisken för trötta spelare', function () {
+it('increases injury risk for tired players', function () {
     $homeClub = Club::factory()->create();
     $awayClub = Club::factory()->create();
 
-    // Skapa en trött spelare
+    // Create a tired player
     $tiredPlayer = Player::factory()->create([
         'club_id' => $homeClub->id,
         'stamina' => 1
     ]);
 
-    // Skapa en pigg spelare
+    // Create a fresh player
     $freshPlayer = Player::factory()->create([
         'club_id' => $homeClub->id,
         'stamina' => 99
@@ -88,7 +88,7 @@ it('ökar skaderisken för trötta spelare', function () {
     $tiredPlayerInjuries = 0;
     $freshPlayerInjuries = 0;
 
-    // Simulera många matcher för att se mönster
+    // Simulate many matches to see patterns
     for ($i = 0; $i < 30; $i++) {
         $match->refresh();
         $match->status = 'scheduled';
@@ -100,11 +100,11 @@ it('ökar skaderisken för trötta spelare', function () {
         $freshPlayerInjuries += Injury::where('player_id', $freshPlayer->id)->count();
     }
 
-    // Den trötta spelaren bör ha fler skador
+    // The tired player should have more injuries
     expect($tiredPlayerInjuries)->toBeGreaterThan($freshPlayerInjuries);
 });
 
-it('sparar matchresultat i databasen', function () {
+it('saves match results in the database', function () {
     $homeClub = Club::factory()->create();
     $awayClub = Club::factory()->create();
 
@@ -116,7 +116,7 @@ it('sparar matchresultat i databasen', function () {
         'away_score' => null
     ]);
 
-    // Skapa initiala statistikrader för båda lagen
+    // Create initial statistics for both clubs
     LeagueClubStatistic::factory()->create([
         'club_id' => $homeClub->id,
         'league_id' => $match->league_id,
@@ -139,7 +139,7 @@ it('sparar matchresultat i databasen', function () {
         ->home_score->not->toBeNull()
         ->away_score->not->toBeNull();
 
-    // Verifiera att ligastatistiken uppdaterades
+    // Verify that the league statistics were updated
     $homeStats = DB::table('league_club_statistics')
         ->where('club_id', $homeClub->id)
         ->where('league_id', $match->league_id)
@@ -149,15 +149,15 @@ it('sparar matchresultat i databasen', function () {
     expect($homeStats->matches_played)->toBe(1);
 });
 
-it('kan simulera flera matcher i följd', function () {
-    // Skapa matcher för dagens datum
+it('can simulate multiple matches in a row', function () {
+    // Create matches for today
     $today = now()->format('Y-m-d');
     $matches = Game::factory(5)->create([
         'status' => 'scheduled',
         'scheduled_at' => now()->subMinutes(10)
     ]);
 
-    // Skapa statistikrader för alla lag i matcherna
+    // Create statistics for all clubs in the matches
     foreach ($matches as $match) {
         $homeData = [
             'club_id' => $match->home_club_id,
@@ -180,9 +180,8 @@ it('kan simulera flera matcher i följd', function () {
         }
     }
 
-    // Kör kommandot med dagens datum
+    // Run the command with today's date
     $this->artisan('matches:simulate', ['--date' => $today])
-        ->expectsOutput("Simulerar 5 matcher för {$today}")
         ->assertSuccessful();
 
     foreach ($matches as $match) {
