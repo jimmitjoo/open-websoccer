@@ -53,7 +53,7 @@ class TrainingService
         $effects = $type->effects;
 
         // Justera effekter baserat på spelarens tillstånd
-        if ($player->is_injured) {
+        if ($player->isInjured()) {
             $effects = $this->adjustEffectsForInjury($effects);
         }
 
@@ -70,11 +70,7 @@ class TrainingService
     {
         foreach ($effects as $attribute => $change) {
 
-            if ($player->injured && $change > 0) {
-                $change = round($change * 0.25);
-            } else {
-                $change = round($change);
-            }
+            $change = round($change);
 
             // Applicera förändringen om attributet finns
             if (isset($player->$attribute)) {

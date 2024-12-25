@@ -6,10 +6,18 @@ namespace App\Services;
 
 use App\Models\Game;
 use App\Models\Club;
+use App\Models\Player;
 use Illuminate\Support\Facades\DB;
 
 class MatchSimulator
 {
+    private InjuryService $injuryService;
+
+    public function __construct(InjuryService $injuryService)
+    {
+        $this->injuryService = $injuryService;
+    }
+
     public function simulate(Game $match): void
     {
         // Enkel simuleringslogik för början
@@ -34,6 +42,17 @@ class MatchSimulator
                 $awayScore
             );
         });
+
+        // För varje minut i matchen
+        for ($minute = 1; $minute <= 90; $minute++) {
+            // Kontrollera skaderisk för spelare
+            foreach ($match->homeClub->players as $player) {
+                $this->checkForInjury($player, $match, $minute);
+            }
+            foreach ($match->awayClub->players as $player) {
+                $this->checkForInjury($player, $match, $minute);
+            }
+        }
     }
 
     private function updateLeagueStats(
@@ -106,5 +125,26 @@ class MatchSimulator
             ->where('league_id', $leagueId)
             ->where('season_id', $seasonId)
             ->update($awayStats);
+    }
+
+    private function checkForInjury(Player $player, Game $game, int $minute): void
+    {
+        // Grundrisk för skada per minut (0.1%)
+        $baseRisk = 0.001;
+
+        // Öka risken om spelaren har låg stamina
+        if ($player->stamina < 50) {
+            $baseRisk *= (1 + ((50 - $player->stamina) / 50));
+        }
+
+        // Öka risken i slutet av matchen
+        if ($minute > 70) {
+            $baseRisk *= 1.5;
+        }
+
+        // Slumpa om skada inträffar
+        if (rand(1, 1000) <= ($baseRisk * 1000)) {
+            $this->injuryService->createMatchInjury($player, $game);
+        }
     }
 }

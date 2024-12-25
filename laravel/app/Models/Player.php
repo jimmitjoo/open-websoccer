@@ -87,4 +87,36 @@ class Player extends Model
         return $this->hasOne(TransferListing::class)
             ->where('status', 'active');
     }
+
+    public function injuries()
+    {
+        return $this->hasMany(Injury::class);
+    }
+
+    public function currentInjury()
+    {
+        return $this->injuries()
+            ->whereNull('actual_return_at')
+            ->latest('started_at')
+            ->first();
+    }
+
+    public function isInjured(): bool
+    {
+        return $this->currentInjury() !== null;
+    }
+
+    public function scopeInjured($query)
+    {
+        return $query->whereHas('injuries', function ($q) {
+            $q->whereNull('actual_return_at');
+        });
+    }
+
+    public function scopeHealthy($query)
+    {
+        return $query->whereDoesntHave('injuries', function ($q) {
+            $q->whereNull('actual_return_at');
+        });
+    }
 }

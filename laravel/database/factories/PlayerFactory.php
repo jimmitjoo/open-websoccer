@@ -30,8 +30,6 @@ class PlayerFactory extends Factory
             'midfield' => fake()->numberBetween(1, 100),
             'striker' => fake()->numberBetween(1, 100),
             'birth_date' => fake()->date(),
-            'injury_days' => fake()->numberBetween(1, 100),
-            'injured' => fake()->boolean(),
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'position' => fake()->randomElement(['GK', 'DEF', 'MID', 'FWD']),

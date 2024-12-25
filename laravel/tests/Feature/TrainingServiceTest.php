@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Club;
+use App\Models\Injury;
 use App\Models\Player;
 use App\Models\TrainingType;
 use App\Models\TrainingSession;
@@ -17,7 +18,6 @@ beforeEach(function () {
         'stamina' => 50,
         'technique' => 50,
         'form' => 0,
-        'injured' => false
     ]);
 
     $this->trainingType = TrainingType::factory()->create([
@@ -51,10 +51,15 @@ test('it applies training effects correctly', function () {
 test('it reduces training effects for injured players', function () {
     $originalTechnique = $this->player->technique;
 
-    $this->player->injured = true;
+    Injury::factory()->create([
+        'player_id' => $this->player->id,
+        'started_at' => now(),
+        'expected_return_at' => now()->addWeeks(2),
+        'actual_return_at' => null,
+    ]);
     $this->player->save();
 
-    expect($this->player->fresh()->injured)->toBeTrue();
+    expect($this->player->fresh()->isInjured())->toBeTrue();
 
     $this->service->executeTraining($this->session);
 
@@ -62,7 +67,7 @@ test('it reduces training effects for injured players', function () {
 
     expect($updatedPlayer->technique)
         ->toBeLessThan($originalTechnique + 2)
-        ->and($updatedPlayer->injured)->toBeTrue();
+        ->and($updatedPlayer->isInjured())->toBeTrue();
 });
 
 test('it marks session as completed', function () {
