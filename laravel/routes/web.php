@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\SeasonController;
 use App\Http\Controllers\TransferMarketController;
 use App\Http\Controllers\TransferOfferController;
 use App\Http\Controllers\TrainingController;
+use App\Http\Controllers\PlayerController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -82,6 +83,9 @@ Route::middleware(['auth', 'has.club'])->group(function () {
     Route::post('/contracts/{contract}/terminate', [ContractController::class, 'terminate'])
         ->name('contracts.terminate');
 
+    // Spelare
+    Route::get('/players/{player}', [PlayerController::class, 'show'])
+        ->name('players.show');
 
     // Transfer Market Routes
     Route::get('/transfer-market', [TransferMarketController::class, 'index'])
@@ -113,4 +117,16 @@ Route::middleware(['auth', 'has.club'])->group(function () {
         ->name('training.index');
     Route::post('/training/schedule', [TrainingController::class, 'schedule'])
         ->name('training.schedule');
+});
+
+// Spelarform - tillgänglig för alla inloggade användare
+Route::middleware(['auth'])->group(function () {
+    Route::get('/players/{player}/form-history', \App\Livewire\Players\FormHistory::class)
+        ->name('players.form-history');
+});
+
+// Admin-routes för formjustering
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+    Route::get('/players/{player}/adjust-form', \App\Livewire\Admin\FormAdjustment::class)
+        ->name('admin.players.adjust-form');
 });

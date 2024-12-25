@@ -61,7 +61,10 @@
                                         @foreach ($club->players->where('position', $position) as $player)
                                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                                                 <td class="px-4 py-2">
-                                                    {{ $player->first_name }} {{ $player->last_name }}
+                                                    <a href="{{ route('players.show', $player) }}"
+                                                        class="text-blue-600 hover:text-blue-800">
+                                                        {{ $player->first_name }} {{ $player->last_name }}
+                                                    </a>
                                                     @if ($player->transferListing)
                                                         <span
                                                             class="ml-2 px-2 py-0.5 text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100 rounded-full">

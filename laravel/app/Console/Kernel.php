@@ -35,6 +35,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('training:execute')
             ->dailyAt('03:00')
             ->appendOutputTo(storage_path('logs/training.log'));
+
+        $schedule->command('players:update-forms')->dailyAt('03:00');
     }
 
     /**

@@ -14,10 +14,12 @@ use Illuminate\Support\Facades\Log;
 class MatchSimulator
 {
     private InjuryService $injuryService;
+    private FormService $formService;
 
-    public function __construct(InjuryService $injuryService)
+    public function __construct(InjuryService $injuryService, FormService $formService)
     {
         $this->injuryService = $injuryService;
+        $this->formService = $formService;
     }
 
     public function simulate(Game $match): void
@@ -32,21 +34,10 @@ class MatchSimulator
         // Ladda relationerna explicit
         $match->load(['homeClub.players', 'awayClub.players']);
 
-        Log::debug("Antal spelare", [
-            'home_players' => $match->homeClub->players->count(),
-            'away_players' => $match->awayClub->players->count()
-        ]);
-
-        // Enkel simuleringslogik för början
-        $homeScore = random_int(0, 4);
-        $awayScore = random_int(0, 3);
-
-        DB::transaction(function () use ($match, $homeScore, $awayScore) {
-            Log::info("Uppdaterar matchresultat", [
-                'match_id' => $match->id,
-                'home_score' => $homeScore,
-                'away_score' => $awayScore
-            ]);
+        DB::transaction(function () use ($match) {
+            // Simulera matchresultat
+            $homeScore = random_int(0, 4);
+            $awayScore = random_int(0, 3);
 
             // Uppdatera matchresultat
             $match->update([
@@ -54,6 +45,34 @@ class MatchSimulator
                 'away_score' => $awayScore,
                 'status' => GameStatus::COMPLETED
             ]);
+
+            // Simulera spelarnas prestationer och uppdatera form
+            foreach ($match->homeClub->players as $player) {
+                // Simulera ett matchbetyg (1-10)
+                $rating = $this->calculatePlayerRating($player, $homeScore > $awayScore);
+                $this->formService->calculateMatchImpact($player, $match, $rating);
+
+                // Kontrollera skador för varje minut i matchen
+                for ($minute = 1; $minute <= 90; $minute++) {
+                    if ($this->shouldCreateInjury($player, $minute)) {
+                        $this->injuryService->createMatchInjury($player, $match);
+                        break; // Avbryt loop om spelaren blir skadad
+                    }
+                }
+            }
+
+            foreach ($match->awayClub->players as $player) {
+                $rating = $this->calculatePlayerRating($player, $awayScore > $homeScore);
+                $this->formService->calculateMatchImpact($player, $match, $rating);
+
+                // Kontrollera skador för varje minut i matchen
+                for ($minute = 1; $minute <= 90; $minute++) {
+                    if ($this->shouldCreateInjury($player, $minute)) {
+                        $this->injuryService->createMatchInjury($player, $match);
+                        break; // Avbryt loop om spelaren blir skadad
+                    }
+                }
+            }
 
             // Uppdatera ligastatistik
             $this->updateLeagueStats(
@@ -64,29 +83,22 @@ class MatchSimulator
                 $homeScore,
                 $awayScore
             );
-
-            $injuryCount = 0;
-            // För varje minut i matchen
-            for ($minute = 1; $minute <= 90; $minute++) {
-                // Kontrollera skaderisk för spelare
-                foreach ($match->homeClub->players as $player) {
-                    if ($this->checkForInjury($player, $match, $minute)) {
-                        $injuryCount++;
-                    }
-                }
-                foreach ($match->awayClub->players as $player) {
-                    if ($this->checkForInjury($player, $match, $minute)) {
-                        $injuryCount++;
-                    }
-                }
-            }
-
-            Log::info("Match avslutad", [
-                'match_id' => $match->id,
-                'final_score' => "{$homeScore}-{$awayScore}",
-                'injuries' => $injuryCount
-            ]);
         });
+    }
+
+    private function calculatePlayerRating(Player $player, bool $teamWon): float
+    {
+        // Basbetyg mellan 5.0 och 8.0
+        $baseRating = 5.0 + (mt_rand(0, 30) / 10);
+
+        // Justera baserat på spelarens form
+        $formBonus = ($player->form - 50) / 20; // -2.5 till +2.5
+
+        // Vinnande lag får en bonus
+        $winBonus = $teamWon ? 0.5 : 0;
+
+        // Beräkna slutligt betyg (min 1.0, max 10.0)
+        return max(1.0, min(10.0, $baseRating + $formBonus + $winBonus));
     }
 
     private function updateLeagueStats(
@@ -161,14 +173,22 @@ class MatchSimulator
             ->update($awayStats);
     }
 
-    private function checkForInjury(Player $player, Game $game, int $minute): bool
+    private function shouldCreateInjury(Player $player, int $minute): bool
     {
         // Öka grundrisken till 0.5% per minut
         $baseRisk = 0.001;
 
-        // Öka risken om spelaren har låg stamina
-        if ($player->stamina < 50) {
-            $baseRisk *= (1 + ((50 - $player->stamina) / 50));
+        // Öka risken om spelaren har väldigt låg stamina
+        if ($player->stamina < 15) {
+            $baseRisk *= 3.5;
+        } elseif ($player->stamina > 30) {
+            $baseRisk *= 1.25;
+        } elseif ($player->stamina > 50) {
+            $baseRisk *= 1.1;
+        } elseif ($player->stamina > 75) {
+            $baseRisk *= 0.8;
+        } elseif ($player->stamina > 85) {
+            $baseRisk *= 0.5;
         }
 
         // Öka risken i slutet av matchen
@@ -176,22 +196,7 @@ class MatchSimulator
             $baseRisk *= 1.5;
         }
 
-        // Slumpa om skada inträffar (nu 5 av 1000 per minut som grund)
-        if (rand(1, 1000) <= ($baseRisk * 1000)) {
-            $injury = $this->injuryService->createMatchInjury($player, $game);
-
-            Log::info("Spelare skadad", [
-                'player_id' => $player->id,
-                'player_name' => $player->name,
-                'match_id' => $game->id,
-                'minute' => $minute,
-                'injury_type' => $injury->injuryType->name,
-                'expected_return' => $injury->expected_return_at->format('Y-m-d')
-            ]);
-
-            return true;
-        }
-
-        return false;
+        // Slumpa om skada inträffar
+        return rand(1, 1000) <= ($baseRisk * 1000);
     }
 }

@@ -19,6 +19,9 @@ class Player extends Model
         'position',
         'club_id',
         'form',
+        'form_trend',
+        'matches_played_recently',
+        'last_form_update',
         'strength',
         'stamina',
         'speed',
@@ -33,6 +36,9 @@ class Player extends Model
     protected $casts = [
         'birth_date' => 'datetime',
         'form' => 'integer',
+        'form_trend' => 'float',
+        'matches_played_recently' => 'integer',
+        'last_form_update' => 'datetime',
         'strength' => 'integer',
         'stamina' => 'integer',
         'speed' => 'integer',
@@ -118,5 +124,10 @@ class Player extends Model
         return $query->whereDoesntHave('injuries', function ($q) {
             $q->whereNull('actual_return_at');
         });
+    }
+
+    public function formUpdates()
+    {
+        return $this->hasMany(FormUpdate::class);
     }
 }

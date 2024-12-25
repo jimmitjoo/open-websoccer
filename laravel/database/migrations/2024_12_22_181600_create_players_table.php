@@ -14,7 +14,9 @@ return new class extends Migration
             $table->string('last_name');
             $table->foreignId('club_id')->nullable()->constrained()->nullOnDelete();
             $table->integer('strength')->default(50);
-            $table->integer('form')->default(0);
+
+            $table->integer('form')->default(60);
+
             $table->integer('stamina')->default(50);
             $table->integer('speed')->default(50);
             $table->integer('technique')->default(50);

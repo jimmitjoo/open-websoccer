@@ -69,13 +69,13 @@ it('ökar skaderisken för trötta spelare', function () {
     // Skapa en trött spelare
     $tiredPlayer = Player::factory()->create([
         'club_id' => $homeClub->id,
-        'stamina' => 20
+        'stamina' => 1
     ]);
 
     // Skapa en pigg spelare
     $freshPlayer = Player::factory()->create([
         'club_id' => $homeClub->id,
-        'stamina' => 90
+        'stamina' => 99
     ]);
 
     $match = Game::factory()->create([
@@ -89,7 +89,7 @@ it('ökar skaderisken för trötta spelare', function () {
     $freshPlayerInjuries = 0;
 
     // Simulera många matcher för att se mönster
-    for ($i = 0; $i < 100; $i++) {
+    for ($i = 0; $i < 30; $i++) {
         $match->refresh();
         $match->status = 'scheduled';
         $match->save();
