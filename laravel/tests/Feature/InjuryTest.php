@@ -32,8 +32,8 @@ it('kan skapa en skada för en spelare under en match', function () {
         ->match_id->toBe($game->id)
         ->actual_return_at->toBeNull();
 
+    $minDate = now()->addDays(2)->startOfDay();
     $maxDate = now()->addDays(7)->startOfDay();
-    $minDate = now()->startOfDay();
 
     expect($injury->expected_return_at)
         ->toBeInstanceOf(Carbon::class)
