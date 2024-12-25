@@ -49,22 +49,17 @@ test('it applies training effects correctly', function () {
 });
 
 test('it reduces training effects for injured players', function () {
-    // Spara ursprunglig technique-värde
     $originalTechnique = $this->player->technique;
 
-    // Uppdatera spelaren till skadad och verifiera uppdateringen
     $this->player->injured = true;
     $this->player->save();
 
-    // Verifiera att spelaren verkligen är skadad
     expect($this->player->fresh()->injured)->toBeTrue();
 
     $this->service->executeTraining($this->session);
 
-    // Hämta spelarens nya värden från databasen
     $updatedPlayer = $this->player->fresh();
 
-    // Verifiera att technique-ökningen är mindre än för oskadade spelare
     expect($updatedPlayer->technique)
         ->toBeLessThan($originalTechnique + 2)
         ->and($updatedPlayer->injured)->toBeTrue();

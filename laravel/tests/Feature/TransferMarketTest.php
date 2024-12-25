@@ -2,7 +2,7 @@
 
 use App\Models\User;
 use App\Models\Player;
-use App\Models\Club;  // Ändrat från Team till Club
+use App\Models\Club;
 use App\Models\TransferListing;
 use App\Models\TransferOffer;
 use App\Enums\TransferListingStatus;
@@ -13,11 +13,9 @@ use App\Models\Role;
 use function Pest\Laravel\{get, post};
 
 beforeEach(function () {
-    // Skapa en testanvändare med ett lag och spelare
     $this->user = User::factory()->create(['role' => Role::MANAGER]);
     $this->club = Club::factory()->create(['user_id' => $this->user->id, 'balance' => 100000000]); // Ändrat från team till club
-    $this->player = Player::factory()->create(['club_id' => $this->club->id]); // Ändrat från team_id till club_id
-    // Skapa ett kontrakt mellan klubben och spelaren
+    $this->player = Player::factory()->create(['club_id' => $this->club->id]);
     $this->contract = Contract::factory()->create([
         'player_id' => $this->player->id,
         'club_id' => $this->club->id,

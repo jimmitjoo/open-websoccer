@@ -7,7 +7,6 @@ use App\Models\Role;
 use function Pest\Laravel\{get, post};
 
 beforeEach(function () {
-    // Skapa en testanvändare med ett lag och spelare
     $this->user = User::factory()->create(['role' => Role::MANAGER]);
 
     $this->actingAs($this->user);

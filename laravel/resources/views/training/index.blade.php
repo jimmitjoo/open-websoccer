@@ -25,7 +25,7 @@
                                     class="mt-1 block w-full dark:bg-gray-700">
                                     @foreach ($trainingTypes as $type)
                                         <option value="{{ $type->id }}">
-                                            {{ $type->name }} ({{ number_format($type->cost) }} kr)
+                                            {{ $type->name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -40,6 +40,22 @@
 
                         <div class="mt-6">
                             <x-label value="{{ __('Välj spelare') }}" class="mb-2" />
+                            <div class="mb-4">
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="select-all"
+                                        class="rounded dark:bg-gray-700 border-gray-300 dark:border-gray-600">
+                                    <span class="ml-2 text-sm">{{ __('Markera/avmarkera alla') }}</span>
+                                </label>
+                            </div>
+
+                            <script>
+                                document.getElementById('select-all').addEventListener('change', function() {
+                                    const checkboxes = document.querySelectorAll('input[name="player_ids[]"]:not(:disabled)');
+                                    checkboxes.forEach(checkbox => {
+                                        checkbox.checked = this.checked;
+                                    });
+                                });
+                            </script>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 @foreach (auth()->user()->club->players as $player)
                                     <label class="flex items-center">
