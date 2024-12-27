@@ -2,11 +2,11 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Hantera Säsonger') }}
+                {{ __('Manage Seasons') }}
             </h2>
             <a href="{{ route('admin.seasons.create') }}"
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                {{ __('Skapa Ny Säsong') }}
+                {{ __('Create New Season') }}
             </a>
         </div>
     </x-slot>
@@ -26,7 +26,7 @@
                             <tr>
                                 <th
                                     class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                    {{ __('Namn') }}
+                                    {{ __('Name') }}
                                 </th>
                                 <th
                                     class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -34,7 +34,7 @@
                                 </th>
                                 <th
                                     class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                    {{ __('Slut') }}
+                                    {{ __('End') }}
                                 </th>
                                 <th
                                     class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -42,7 +42,7 @@
                                 </th>
                                 <th
                                     class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                    {{ __('Åtgärder') }}
+                                    {{ __('Actions') }}
                                 </th>
                             </tr>
                         </thead>
@@ -62,27 +62,27 @@
                                         @if ($season->is_active)
                                             <span
                                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                {{ __('Aktiv') }}
+                                                {{ __('Active') }}
                                             </span>
                                         @else
                                             <span
                                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                                {{ __('Inaktiv') }}
+                                                {{ __('Inactive') }}
                                             </span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                         <a href="{{ route('admin.seasons.edit', $season) }}"
                                             class="text-indigo-600 hover:text-indigo-900 mr-4">
-                                            {{ __('Redigera') }}
+                                            {{ __('Edit') }}
                                         </a>
                                         <form action="{{ route('admin.seasons.destroy', $season) }}" method="POST"
                                             class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 hover:text-red-900"
-                                                onclick="return confirm('{{ __('Är du säker på att du vill ta bort denna säsong?') }}')">
-                                                {{ __('Ta bort') }}
+                                                onclick="return confirm('{{ __('Are you sure you want to delete this season?') }}')">
+                                                {{ __('Delete') }}
                                             </button>
                                         </form>
                                     </td>

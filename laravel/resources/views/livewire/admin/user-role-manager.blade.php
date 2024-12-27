@@ -2,21 +2,21 @@
     <div class="sm:flex sm:items-center sm:justify-between">
         <div>
             <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">
-                {{ __('Användarroller') }}
+                {{ __('User roles') }}
             </h2>
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                {{ __('Hantera användarroller och behörigheter') }}
+                {{ __('Manage user roles and permissions') }}
             </p>
         </div>
     </div>
 
-    <!-- Sökfält -->
+    <!-- Search field -->
     <div class="mt-6 max-w-xl">
         <x-input type="search" wire:model.live.debounce.300ms="search" class="block w-full"
-            placeholder="{{ __('Sök användare...') }}" />
+            placeholder="{{ __('Search users...') }}" />
     </div>
 
-    <!-- Användarlista -->
+    <!-- User list -->
     <div class="mt-6 space-y-4">
         @foreach ($users as $user)
             <div class="bg-white dark:bg-gray-900 shadow-sm ring-1 ring-gray-300 dark:ring-gray-700 rounded-lg">
@@ -60,7 +60,7 @@
                                     @foreach ($roles as $role)
                                         <option value="{{ $role }}"
                                             {{ $user->role === $role ? 'selected' : '' }}>
-                                            {{ __('Ändra till') }}: {{ ucfirst($role) }}
+                                            {{ __('Change to') }}: {{ ucfirst($role) }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -78,8 +78,8 @@
     </div>
 
     <!-- Notification -->
-    <div x-data="{ show: false, message: '' }" x-on:role-updated="show = true; message = 'Användarens roll har uppdaterats'"
-        x-show="show" x-transition.opacity.duration.500ms x-init="setTimeout(() => show = false, 2000)"
+    <div x-data="{ show: false, message: '' }" x-on:role-updated="show = true; message = 'User role has been updated'" x-show="show"
+        x-transition.opacity.duration.500ms x-init="setTimeout(() => show = false, 2000)"
         class="fixed bottom-0 right-0 m-6 p-4 rounded-lg bg-green-500 text-white shadow-lg dark:bg-green-600"
         style="display: none;">
         <p x-text="message" class="text-sm font-medium"></p>

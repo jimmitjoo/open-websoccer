@@ -1,9 +1,9 @@
 <div>
     <div class="mb-4 space-y-4">
-        <input wire:model.live="search" type="search" placeholder="Sök klubb..." class="w-full rounded-lg">
+        <input wire:model.live="search" type="search" placeholder="{{ __('Search club...') }}" class="w-full rounded-lg">
 
         <select wire:model.live="league" class="w-full rounded-lg">
-            <option value="">Alla ligor</option>
+            <option value="">{{ __('All leagues') }}</option>
             @foreach ($leagues as $id => $name)
                 <option value="{{ $id }}">{{ $name }}</option>
             @endforeach
@@ -21,12 +21,12 @@
                 <p class="text-sm text-gray-600">{{ $club->league->name }}</p>
 
                 <div class="mt-2">
-                    <p>Budget: {{ number_format($club->budget) }} kr</p>
+                    <p>{{ __('Budget') }}: {{ number_format($club->budget) }} {{ __('kr') }}</p>
                 </div>
 
                 <button wire:click="chooseClub({{ $club->id }})"
                     class="mt-4 w-full bg-blue-600 text-white px-4 py-2 rounded-lg">
-                    Välj denna klubb
+                    {{ __('Select this club') }}
                 </button>
             </div>
         @endforeach

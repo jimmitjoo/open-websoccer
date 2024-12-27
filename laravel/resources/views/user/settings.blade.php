@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Inställningar') }}
+            {{ __('Settings') }}
         </h2>
     </x-slot>
 
@@ -13,7 +13,7 @@
                     @method('PUT')
 
                     <div class="mb-4">
-                        <x-label for="locale" value="{{ __('Språk') }}" />
+                        <x-label for="locale" value="{{ __('Language') }}" />
                         <select name="locale" id="locale"
                             class="block mt-1 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
                             <option value="en" {{ auth()->user()->locale === 'en' ? 'selected' : '' }}>English
@@ -26,12 +26,12 @@
                     <div class="mb-4">
                         <label class="flex items-center">
                             <x-checkbox name="settings[email_notifications]" value="1" :checked="auth()->user()->settings['email_notifications'] ?? false" />
-                            <span class="ml-2">{{ __('Få e-postmeddelanden') }}</span>
+                            <span class="ml-2">{{ __('Receive email notifications') }}</span>
                         </label>
                     </div>
 
                     <x-button>
-                        {{ __('Spara') }}
+                        {{ __('Save') }}
                     </x-button>
                 </form>
             </div>

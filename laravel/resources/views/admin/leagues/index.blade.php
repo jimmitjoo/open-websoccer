@@ -2,11 +2,11 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Hantera Ligor') }}
+                {{ __('Manage Leagues') }}
             </h2>
             <a href="{{ route('admin.leagues.create') }}"
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                {{ __('Skapa Ny Liga') }}
+                {{ __('Create New League') }}
             </a>
         </div>
     </x-slot>
@@ -26,19 +26,19 @@
                             <tr>
                                 <th
                                     class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                    {{ __('Namn') }}
+                                    {{ __('Name') }}
                                 </th>
                                 <th
                                     class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                    {{ __('Land') }}
+                                    {{ __('Country') }}
                                 </th>
                                 <th
                                     class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                    {{ __('Säsonger') }}
+                                    {{ __('Seasons') }}
                                 </th>
                                 <th
                                     class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                    {{ __('Åtgärder') }}
+                                    {{ __('Actions') }}
                                 </th>
                             </tr>
                         </thead>
@@ -57,19 +57,19 @@
                                     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                         <a href="{{ route('admin.leagues.show', $league) }}"
                                             class="text-blue-600 hover:text-blue-900 mr-4">
-                                            {{ __('Visa') }}
+                                            {{ __('View') }}
                                         </a>
                                         <a href="{{ route('admin.leagues.edit', $league) }}"
                                             class="text-indigo-600 hover:text-indigo-900 mr-4">
-                                            {{ __('Redigera') }}
+                                            {{ __('Edit') }}
                                         </a>
                                         <form action="{{ route('admin.leagues.destroy', $league) }}" method="POST"
                                             class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 hover:text-red-900"
-                                                onclick="return confirm('{{ __('Är du säker på att du vill ta bort denna liga?') }}')">
-                                                {{ __('Ta bort') }}
+                                                onclick="return confirm('{{ __('Are you sure you want to delete this league?') }}')">
+                                                {{ __('Delete') }}
                                             </button>
                                         </form>
                                     </td>

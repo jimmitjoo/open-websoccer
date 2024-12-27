@@ -1,10 +1,10 @@
 <div class="p-6">
     <div class="mb-6 space-y-4">
-        <input wire:model.live="search" type="search" placeholder="Sök klubb..."
+        <input wire:model.live="search" type="search" placeholder="{{ __('Search club...') }}"
             class="w-full rounded-lg border-gray-300 dark:border-gray-700">
 
         <select wire:model.live="league" class="w-full rounded-lg border-gray-300 dark:border-gray-700">
-            <option value="">Alla ligor</option>
+            <option value="">{{ __('All leagues') }}</option>
             @foreach ($leagues as $id => $name)
                 <option value="{{ $id }}">{{ $name }}</option>
             @endforeach
@@ -26,14 +26,14 @@
                         {{ $club->leagues->first()?->name ?? 'Ingen liga' }}
                     </p>
                     <div class="mt-2 space-y-1">
-                        <p>Budget: {{ number_format($club->budget) }} kr</p>
-                        <p>Kapacitet:
+                        <p>{{ __('Budget') }}: {{ number_format($club->budget) }} {{ __('kr') }}</p>
+                        <p>{{ __('Capacity') }}:
                             {{ number_format($club->stadium->capacity_seats + $club->stadium->capacity_stands + $club->stadium->capacity_vip) }}
                         </p>
                     </div>
                     <button wire:click="chooseClub({{ $club->id }})"
                         class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
-                        Välj denna klubb
+                        {{ __('Select this club') }}
                     </button>
                 </div>
             </div>

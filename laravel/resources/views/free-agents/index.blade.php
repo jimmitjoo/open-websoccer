@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            Free Agents
+            {{ __('Free Agents') }}
         </h2>
     </x-slot>
 
@@ -14,19 +14,19 @@
                             <h3 class="text-lg font-semibold mb-4">
                                 @switch($position)
                                     @case('GK')
-                                        Målvakter
+                                        {{ __('Goalkeepers') }}
                                     @break
 
                                     @case('DEF')
-                                        Försvarare
+                                        {{ __('Defenders') }}
                                     @break
 
                                     @case('MID')
-                                        Mittfältare
+                                        {{ __('Midfielders') }}
                                     @break
 
                                     @case('FWD')
-                                        Anfallare
+                                        {{ __('Forwards') }}
                                     @break
                                 @endswitch
                             </h3>
@@ -35,12 +35,12 @@
                                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                     <thead>
                                         <tr>
-                                            <th class="px-4 py-2 text-left">Namn</th>
-                                            <th class="px-4 py-2 text-left">Ålder</th>
-                                            <th class="px-4 py-2 text-center">Fysik</th>
-                                            <th class="px-4 py-2 text-center">Teknik</th>
+                                            <th class="px-4 py-2 text-left">{{ __('Name') }}</th>
+                                            <th class="px-4 py-2 text-left">{{ __('Age') }}</th>
+                                            <th class="px-4 py-2 text-center">{{ __('Physical') }}</th>
+                                            <th class="px-4 py-2 text-center">{{ __('Technical') }}</th>
                                             <th class="px-4 py-2 text-center">
-                                                {{ $position === 'GK' ? 'Målvakt' : ($position === 'DEF' ? 'Försvar' : ($position === 'MID' ? 'Mittfält' : 'Anfall')) }}
+                                                {{ $position === 'GK' ? __('Goalkeeper') : ($position === 'DEF' ? __('Defender') : ($position === 'MID' ? __('Midfielder') : __('Striker'))) }}
                                             </th>
                                             <th class="px-4 py-2"></th>
                                         </tr>
@@ -67,7 +67,7 @@
                                                         'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100' =>
                                                             $physicalAvg >= 65,
                                                     ])>
-                                                        {{ $physicalAvg < 45 ? 'Svag' : ($physicalAvg < 65 ? 'Medel' : 'Stark') }}
+                                                        {{ $physicalAvg < 45 ? __('Weak') : ($physicalAvg < 65 ? __('Average') : __('Strong')) }}
                                                     </span>
                                                 </td>
                                                 <td class="px-4 py-2 text-center">
@@ -85,7 +85,7 @@
                                                         'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100' =>
                                                             $technicalAvg >= 65,
                                                     ])>
-                                                        {{ $technicalAvg < 45 ? 'Svag' : ($technicalAvg < 65 ? 'Medel' : 'Skicklig') }}
+                                                        {{ $technicalAvg < 45 ? __('Weak') : ($technicalAvg < 65 ? __('Average') : __('Skilled')) }}
                                                     </span>
                                                 </td>
                                                 <td class="px-4 py-2 text-center">
@@ -110,7 +110,7 @@
                                                         'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100' =>
                                                             $positionSkill >= 65,
                                                     ])>
-                                                        {{ $positionSkill < 45 ? 'Svag' : ($positionSkill < 65 ? 'Medel' : 'Utmärkt') }}
+                                                        {{ $positionSkill < 45 ? __('Weak') : ($positionSkill < 65 ? __('Average') : __('Excellent')) }}
                                                     </span>
                                                 </td>
                                                 <td class="px-4 py-2 text-right">
@@ -118,7 +118,7 @@
                                                         @if (auth()->user()->club)
                                                             <button onclick="negotiateContract({{ $player->id }})"
                                                                 class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                                                                Förhandla
+                                                                {{ __('Negotiate') }}
                                                             </button>
                                                         @endif
                                                     @endauth
@@ -139,29 +139,33 @@
     <div id="negotiateModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800">
             <div class="mt-3">
-                <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">Föreslå kontrakt</h3>
+                <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
+                    {{ __('Propose contract') }}
+                </h3>
                 <div class="mt-2">
                     <form id="negotiateForm" class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Lön per
-                                månad</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                {{ __('Salary per month') }}
+                            </label>
                             <input type="number" name="salary" id="salary" min="1000"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kontraktslängd
-                                (månader)</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                {{ __('Contract duration (months)') }}
+                            </label>
                             <input type="number" name="duration" id="duration" min="1" max="60"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                         </div>
                         <div class="flex justify-end gap-3">
                             <button type="button" onclick="closeNegotiateModal()"
                                 class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
-                                Avbryt
+                                {{ __('Cancel') }}
                             </button>
                             <button type="submit"
                                 class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-                                Förhandla
+                                {{ __('Negotiate') }}
                             </button>
                         </div>
                     </form>
@@ -225,7 +229,7 @@
                     });
             });
 
-            // Stäng modal om man klickar utanför
+            // Close modal if clicked outside
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
                     closeNegotiateModal();

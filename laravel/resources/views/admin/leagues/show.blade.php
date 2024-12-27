@@ -7,11 +7,11 @@
             <div>
                 <a href="{{ route('admin.leagues.edit', $league) }}"
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">
-                    {{ __('Redigera') }}
+                    {{ __('Edit') }}
                 </a>
                 <a href="{{ route('admin.leagues.index') }}"
                     class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                    {{ __('Tillbaka') }}
+                    {{ __('Back') }}
                 </a>
             </div>
         </div>
@@ -24,13 +24,13 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                                {{ __('Ligadetaljer') }}
+                                {{ __('League details') }}
                             </h3>
                             <dl>
                                 <div
                                     class="bg-gray-50 dark:bg-gray-700 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                     <dt class="text-sm font-medium text-gray-500 dark:text-gray-300">
-                                        {{ __('Namn') }}
+                                        {{ __('Name') }}
                                     </dt>
                                     <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2">
                                         {{ $league->name }}
@@ -40,7 +40,7 @@
                                 <div
                                     class="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                     <dt class="text-sm font-medium text-gray-500 dark:text-gray-300">
-                                        {{ __('Land') }}
+                                        {{ __('Country') }}
                                     </dt>
                                     <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2">
                                         {{ $league->country_code }}
@@ -50,17 +50,17 @@
                                 <div
                                     class="bg-gray-50 dark:bg-gray-700 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                     <dt class="text-sm font-medium text-gray-500 dark:text-gray-300">
-                                        {{ __('Nivå') }}
+                                        {{ __('Level') }}
                                     </dt>
                                     <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2">
-                                        {{ __($league->level === 'national' ? 'Nationell' : 'Kontinental') }}
+                                        {{ __($league->level === 'national' ? 'National' : 'Continental') }}
                                     </dd>
                                 </div>
 
                                 <div
                                     class="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                     <dt class="text-sm font-medium text-gray-500 dark:text-gray-300">
-                                        {{ __('Rang') }}
+                                        {{ __('Rank') }}
                                     </dt>
                                     <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2">
                                         {{ $league->rank }}
@@ -70,7 +70,7 @@
                                 <div
                                     class="bg-gray-50 dark:bg-gray-700 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                     <dt class="text-sm font-medium text-gray-500 dark:text-gray-300">
-                                        {{ __('Max antal lag') }}
+                                        {{ __('Max number of teams') }}
                                     </dt>
                                     <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2">
                                         {{ $league->max_teams }}
@@ -86,12 +86,12 @@
                                         @if ($league->is_active)
                                             <span
                                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                {{ __('Aktiv') }}
+                                                {{ __('Active') }}
                                             </span>
                                         @else
                                             <span
                                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                                {{ __('Inaktiv') }}
+                                                {{ __('Inactive') }}
                                             </span>
                                         @endif
                                     </dd>
@@ -101,7 +101,7 @@
 
                         <div>
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                                {{ __('Säsonger i denna liga') }}
+                                {{ __('Seasons in this league') }}
                             </h3>
                             @if ($league->seasons->isNotEmpty())
                                 <ul class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -124,12 +124,12 @@
                                 </ul>
                             @else
                                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                                    {{ __('Inga säsonger kopplade till denna liga.') }}
+                                    {{ __('No seasons linked to this league.') }}
                                 </p>
                             @endif
 
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4 mt-8">
-                                {{ __('Lag i denna liga') }}
+                                {{ __('Clubs in this league') }}
                             </h3>
                             @if ($league->clubs->isNotEmpty())
                                 <ul class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -148,7 +148,7 @@
                                 </ul>
                             @else
                                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                                    {{ __('Inga lag kopplade till denna liga.') }}
+                                    {{ __('No clubs linked to this league.') }}
                                 </p>
                             @endif
                         </div>
@@ -156,7 +156,7 @@
 
                     <div class="mt-8">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                            {{ __('Hantera lag') }}
+                            {{ __('Manage clubs') }}
                         </h3>
                         <livewire:admin.manage-league-clubs :league="$league" />
                     </div>

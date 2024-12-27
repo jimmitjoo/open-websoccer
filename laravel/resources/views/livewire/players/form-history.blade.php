@@ -1,6 +1,6 @@
 <div>
     <div class="bg-white shadow rounded-lg p-6">
-        <h2 class="text-xl font-semibold mb-4">Formhistorik</h2>
+        <h2 class="text-xl font-semibold mb-4">{{ __('Form history') }}</h2>
 
         <div class="space-y-4">
             @foreach ($formHistory as $update)

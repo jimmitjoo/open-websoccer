@@ -29,7 +29,9 @@ class TrainingController extends Controller
 
         $trainingTypes = TrainingType::all();
 
-        return view('training.index', compact('sessions', 'trainingTypes'));
+        $isOwnClub = true;
+
+        return view('clubs.training', compact('sessions', 'trainingTypes', 'club', 'isOwnClub'));
     }
 
     public function schedule(Request $request)

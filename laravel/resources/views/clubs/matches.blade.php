@@ -7,10 +7,10 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="p-6">
-                    <!-- Säsongsväljare -->
+                    <!-- Season selector -->
                     <div class="mb-6">
                         <label for="season"
-                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Säsong</label>
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Season') }}</label>
                         <select id="season" name="season"
                             class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
                             @foreach ($seasons as $s)
@@ -21,9 +21,9 @@
                         </select>
                     </div>
 
-                    <!-- Spelade matcher -->
+                    <!-- Played matches -->
                     <div class="mb-8">
-                        <h3 class="text-lg font-semibold mb-4">Spelade matcher</h3>
+                        <h3 class="text-lg font-semibold mb-4">{{ __('Played matches') }}</h3>
                         <div class="space-y-4">
                             @forelse($playedMatches as $match)
                                 <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
@@ -49,14 +49,15 @@
                                     </div>
                                 </div>
                             @empty
-                                <p class="text-gray-500 dark:text-gray-400">Inga spelade matcher denna säsong</p>
+                                <p class="text-gray-500 dark:text-gray-400">{{ __('No played matches this season') }}
+                                </p>
                             @endforelse
                         </div>
                     </div>
 
-                    <!-- Kommande matcher -->
+                    <!-- Upcoming matches -->
                     <div>
-                        <h3 class="text-lg font-semibold mb-4">Kommande matcher</h3>
+                        <h3 class="text-lg font-semibold mb-4">{{ __('Upcoming matches') }}</h3>
                         <div class="space-y-4">
                             @forelse($upcomingMatches as $match)
                                 <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
@@ -80,7 +81,8 @@
                                     </div>
                                 </div>
                             @empty
-                                <p class="text-gray-500 dark:text-gray-400">Inga kommande matcher denna säsong</p>
+                                <p class="text-gray-500 dark:text-gray-400">{{ __('No upcoming matches this season') }}
+                                </p>
                             @endforelse
                         </div>
                     </div>

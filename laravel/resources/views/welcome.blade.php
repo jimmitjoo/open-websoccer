@@ -158,7 +158,7 @@
         </div>
 
         <footer class="absolute bottom-0 w-full py-6 text-center text-sm text-gray-400">
-            Football Manager Sverige &copy; {{ date('Y') }} | Version {{ config('app.version', '1.0.0') }}
+            {{ config('app.name') }} &copy; {{ date('Y') }} | Version {{ config('app.version', '1.0.0') }}
         </footer>
     </div>
 </body>

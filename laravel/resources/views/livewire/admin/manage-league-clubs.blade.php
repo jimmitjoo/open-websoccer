@@ -12,10 +12,10 @@
 
     @if ($selectedSeason)
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Tillgängliga lag -->
+            <!-- Available clubs -->
             <div>
                 <h4 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                    {{ __('Tillgängliga lag') }}
+                    {{ __('Available clubs') }}
                 </h4>
                 <div class="space-y-2">
                     @forelse($availableClubs as $club)
@@ -28,16 +28,16 @@
                         </div>
                     @empty
                         <p class="text-sm text-gray-500 dark:text-gray-400">
-                            {{ __('Inga tillgängliga lag') }}
+                            {{ __('No available clubs') }}
                         </p>
                     @endforelse
                 </div>
             </div>
 
-            <!-- Lag i ligan -->
+            <!-- Clubs in the league -->
             <div>
                 <h4 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                    {{ __('Lag i ligan') }}
+                    {{ __('Clubs in the league') }}
                 </h4>
                 <div class="space-y-2">
                     @forelse($league->clubs()->wherePivot('season_id', $selectedSeason)->get() as $club)
@@ -50,7 +50,7 @@
                         </div>
                     @empty
                         <p class="text-sm text-gray-500 dark:text-gray-400">
-                            {{ __('Inga lag i ligan') }}
+                            {{ __('No clubs in the league') }}
                         </p>
                     @endforelse
                 </div>

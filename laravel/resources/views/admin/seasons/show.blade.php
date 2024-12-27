@@ -7,11 +7,11 @@
             <div>
                 <a href="{{ route('admin.seasons.edit', $season) }}"
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">
-                    {{ __('Redigera') }}
+                    {{ __('Edit') }}
                 </a>
                 <a href="{{ route('admin.seasons.index') }}"
                     class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                    {{ __('Tillbaka') }}
+                    {{ __('Back') }}
                 </a>
             </div>
         </div>
@@ -24,13 +24,13 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                                {{ __('Säsongsdetaljer') }}
+                                {{ __('Season details') }}
                             </h3>
                             <dl>
                                 <div
                                     class="bg-gray-50 dark:bg-gray-700 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                     <dt class="text-sm font-medium text-gray-500 dark:text-gray-300">
-                                        {{ __('Namn') }}
+                                        {{ __('Name') }}
                                     </dt>
                                     <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2">
                                         {{ $season->name }}
@@ -39,7 +39,7 @@
                                 <div
                                     class="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                     <dt class="text-sm font-medium text-gray-500 dark:text-gray-300">
-                                        {{ __('Startdatum') }}
+                                        {{ __('Start date') }}
                                     </dt>
                                     <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2">
                                         {{ $season->start_date->format('Y-m-d') }}
@@ -48,7 +48,7 @@
                                 <div
                                     class="bg-gray-50 dark:bg-gray-700 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                     <dt class="text-sm font-medium text-gray-500 dark:text-gray-300">
-                                        {{ __('Slutdatum') }}
+                                        {{ __('End date') }}
                                     </dt>
                                     <dd class="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2">
                                         {{ $season->end_date->format('Y-m-d') }}
@@ -63,12 +63,12 @@
                                         @if ($season->is_active)
                                             <span
                                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                {{ __('Aktiv') }}
+                                                {{ __('Active') }}
                                             </span>
                                         @else
                                             <span
                                                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                                {{ __('Inaktiv') }}
+                                                {{ __('Inactive') }}
                                             </span>
                                         @endif
                                     </dd>
@@ -78,7 +78,7 @@
 
                         <div>
                             <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                                {{ __('Ligor i denna säsong') }}
+                                {{ __('Leagues in this season') }}
                             </h3>
                             @if ($season->leagues->isNotEmpty())
                                 <ul class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -100,7 +100,7 @@
                                 </ul>
                             @else
                                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                                    {{ __('Inga ligor kopplade till denna säsong.') }}
+                                    {{ __('No leagues linked to this season.') }}
                                 </p>
                             @endif
                         </div>

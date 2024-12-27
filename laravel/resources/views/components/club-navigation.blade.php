@@ -22,7 +22,7 @@
             'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300' =>
                 $currentPage !== 'overview',
         ])>
-            Översikt
+            {{ __('Overview') }}
         </a>
 
         <a href="{{ route('clubs.squad', $club) }}" @class([
@@ -32,7 +32,7 @@
             'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300' =>
                 $currentPage !== 'squad',
         ])>
-            Trupp
+            {{ __('Squad') }}
         </a>
 
         @if ($isOwnClub)
@@ -43,7 +43,7 @@
                 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300' =>
                     $currentPage !== 'training',
             ])>
-                Träning
+                {{ __('Training') }}
             </a>
         @endif
 
@@ -54,7 +54,7 @@
             'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300' =>
                 $currentPage !== 'matches',
         ])>
-            Matcher
+            {{ __('Matches') }}
         </a>
 
         @if ($isOwnClub)
@@ -65,7 +65,7 @@
                 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300' =>
                     $currentPage !== 'clubhouse',
             ])>
-                Klubbhus
+                {{ __('Clubhouse') }}
             </a>
 
             <a href="{{ route('club.finance') }}" @class([
@@ -75,7 +75,7 @@
                 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300' =>
                     $currentPage !== 'finance',
             ])>
-                Ekonomi
+                {{ __('Finance') }}
             </a>
         @endif
     </nav>

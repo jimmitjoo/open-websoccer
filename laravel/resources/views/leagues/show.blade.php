@@ -13,7 +13,7 @@
                             <option value="{{ route('leagues.show', [$league, $s]) }}" @selected($s->id === $season->id)>
                                 {{ $s->name }}
                                 @if ($s->is_active)
-                                    (Aktiv)
+                                    ({{ __('Active') }})
                                 @endif
                             </option>
                         @endforeach
@@ -26,7 +26,7 @@
                     @if ($season->is_active)
                         <span
                             class="ml-2 px-2 py-1 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100 rounded-full text-xs">
-                            Aktiv
+                            {{ __('Active') }}
                         </span>
                     @endif
                 </div>
@@ -38,50 +38,50 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="p-6">
-                    <!-- Ligtabell -->
+                    <!-- League table -->
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                             <thead class="bg-gray-50 dark:bg-gray-900">
                                 <tr>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                        Pos
+                                        {{ __('Position') }}
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                        Klubb
+                                        {{ __('Club') }}
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                        M
+                                        {{ __('Matches') }}
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                        V
+                                        {{ __('Wins') }}
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                        O
+                                        {{ __('Draws') }}
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                        F
+                                        {{ __('Losses') }}
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                        GM
+                                        {{ __('Goals for') }}
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                        IM
+                                        {{ __('Goals against') }}
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                        MS
+                                        {{ __('Goal difference') }}
                                     </th>
                                     <th scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                        P
+                                        {{ __('Points') }}
                                     </th>
                                 </tr>
                             </thead>

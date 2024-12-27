@@ -19,37 +19,37 @@
                     @auth
                         @if (auth()->user()?->club)
                             <x-nav-link href="{{ route('clubhouse') }}" :active="request()->routeIs('clubhouse')">
-                                {{ __('Min klubb') }}
+                                {{ __('My club') }}
                             </x-nav-link>
                         @else
                             <x-nav-link href="{{ route('choose-club') }}" :active="request()->routeIs('choose-club')">
-                                {{ __('Välj en klubb') }}
+                                {{ __('Select a club') }}
                             </x-nav-link>
                         @endif
                     @endauth
 
                     <x-nav-link href="{{ route('free-agents.index') }}" :active="request()->routeIs('free-agents.index')">
-                        {{ __('Free Agents') }}
+                        {{ __('Search free agents') }}
                     </x-nav-link>
 
                     @auth
                         @if (auth()->user()?->club)
                             <x-nav-link href="{{ route('transfer-market.index') }}" :active="request()->routeIs('transfer-market.index')">
-                                {{ __('Transfermarknad') }}
+                                {{ __('Transfer market') }}
                             </x-nav-link>
                             <x-nav-link href="{{ route('transfer-market.my-listings') }}" :active="request()->routeIs('transfer-market.my-listings')">
-                                {{ __('Mina listings') }}
+                                {{ __('My listings') }}
                             </x-nav-link>
                         @endif
                     @endauth
 
                     @if (auth()->user()?->role === 'admin')
                         <x-nav-link href="{{ route('admin.leagues.index') }}" :active="request()->routeIs('admin.leagues.*')">
-                            {{ __('Hantera Ligor') }}
+                            {{ __('Manage leagues') }}
                         </x-nav-link>
 
                         <x-nav-link href="{{ route('admin.seasons.index') }}" :active="request()->routeIs('admin.seasons.*')">
-                            {{ __('Hantera Säsonger') }}
+                            {{ __('Manage seasons') }}
                         </x-nav-link>
                     @endif
                 </div>
@@ -156,21 +156,21 @@
             @auth
                 @if (auth()->user()?->club)
                     <x-responsive-nav-link href="{{ route('transfer-market.index') }}" :active="request()->routeIs('transfer-market.index')">
-                        {{ __('Transfermarknad') }}
+                        {{ __('Transfer market') }}
                     </x-responsive-nav-link>
                     <x-responsive-nav-link href="{{ route('transfer-market.my-listings') }}" :active="request()->routeIs('transfer-market.my-listings')">
-                        {{ __('Mina listings') }}
+                        {{ __('My listings') }}
                     </x-responsive-nav-link>
                 @endif
             @endauth
 
             @if (auth()->user()?->role === 'admin')
                 <x-responsive-nav-link href="{{ route('admin.leagues.index') }}" :active="request()->routeIs('admin.leagues.*')">
-                    {{ __('Hantera Ligor') }}
+                    {{ __('Manage leagues') }}
                 </x-responsive-nav-link>
 
                 <x-responsive-nav-link href="{{ route('admin.seasons.index') }}" :active="request()->routeIs('admin.seasons.*')">
-                    {{ __('Hantera Säsonger') }}
+                    {{ __('Manage seasons') }}
                 </x-responsive-nav-link>
             @endif
         </div>

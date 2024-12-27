@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Redigera Liga') }}: {{ $league->name }}
+            {{ __('Edit League') }}: {{ $league->name }}
         </h2>
     </x-slot>
 
@@ -14,7 +14,7 @@
                         @method('PUT')
 
                         <div class="mb-4">
-                            <x-label for="name" value="{{ __('Namn') }}" />
+                            <x-label for="name" value="{{ __('Name') }}" />
                             <x-input id="name" class="block mt-1 w-full" type="text" name="name"
                                 :value="old('name', $league->name)" required autofocus />
                             @error('name')
@@ -23,7 +23,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <x-label for="country_code" value="{{ __('Landskod (ISO)') }}" />
+                            <x-label for="country_code" value="{{ __('Country code (ISO)') }}" />
                             <x-input id="country_code" class="block mt-1 w-full" type="text" name="country_code"
                                 :value="old('country_code', $league->country_code)" required maxlength="2" />
                             @error('country_code')
@@ -32,7 +32,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <x-label for="level" value="{{ __('Nivå') }}" />
+                            <x-label for="level" value="{{ __('Level') }}" />
                             <select id="level" name="level"
                                 class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                                 <option value="national"
@@ -48,7 +48,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <x-label for="rank" value="{{ __('Rang') }}" />
+                            <x-label for="rank" value="{{ __('Rank') }}" />
                             <x-input id="rank" class="block mt-1 w-full" type="number" name="rank"
                                 :value="old('rank', $league->rank)" required min="1" />
                             @error('rank')
@@ -57,7 +57,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <x-label for="max_teams" value="{{ __('Max antal lag') }}" />
+                            <x-label for="max_teams" value="{{ __('Max number of teams') }}" />
                             <x-input id="max_teams" class="block mt-1 w-full" type="number" name="max_teams"
                                 :value="old('max_teams', $league->max_teams)" required min="1" />
                             @error('max_teams')
@@ -69,7 +69,7 @@
                             <label class="flex items-center">
                                 <input type="checkbox" name="has_relegation" value="1" class="form-checkbox"
                                     {{ old('has_relegation', $league->has_relegation) ? 'checked' : '' }}>
-                                <span class="ml-2">{{ __('Har nedflyttning') }}</span>
+                                <span class="ml-2">{{ __('Has relegation') }}</span>
                             </label>
                         </div>
 
@@ -77,7 +77,7 @@
                             <label class="flex items-center">
                                 <input type="checkbox" name="has_promotion" value="1" class="form-checkbox"
                                     {{ old('has_promotion', $league->has_promotion) ? 'checked' : '' }}>
-                                <span class="ml-2">{{ __('Har uppflyttning') }}</span>
+                                <span class="ml-2">{{ __('Has promotion') }}</span>
                             </label>
                         </div>
 
@@ -85,12 +85,12 @@
                             <label class="flex items-center">
                                 <input type="checkbox" name="is_active" value="1" class="form-checkbox"
                                     {{ old('is_active', $league->is_active) ? 'checked' : '' }}>
-                                <span class="ml-2">{{ __('Aktiv') }}</span>
+                                <span class="ml-2">{{ __('Active') }}</span>
                             </label>
                         </div>
 
                         <div class="mb-4">
-                            <x-label for="seasons" value="{{ __('Säsonger') }}" />
+                            <x-label for="seasons" value="{{ __('Seasons') }}" />
                             <select name="seasons[]" id="seasons" class="form-multiselect block w-full mt-1" multiple>
                                 @foreach ($seasons as $season)
                                     <option value="{{ $season->id }}"
@@ -110,7 +110,7 @@
                                 {{ __('Avbryt') }}
                             </a>
                             <x-button>
-                                {{ __('Uppdatera Liga') }}
+                                {{ __('Update League') }}
                             </x-button>
                         </div>
                     </form>

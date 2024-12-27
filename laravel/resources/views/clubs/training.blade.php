@@ -1,8 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Träning') }}
-        </h2>
+        <x-club-navigation :club="$club" :isOwnClub="$isOwnClub" currentPage="training" />
     </x-slot>
 
     <div class="py-12">
@@ -12,7 +10,7 @@
                 <!-- Schemalägg nytt träningspass -->
                 <div class="mb-8">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                        {{ __('Schemalägg träning') }}
+                        {{ __('Schedule training') }}
                     </h3>
 
                     <form action="{{ route('training.schedule') }}" method="POST">
@@ -20,7 +18,7 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <x-label for="training_type_id" value="{{ __('Träningstyp') }}" />
+                                <x-label for="training_type_id" value="{{ __('Training type') }}" />
                                 <select id="training_type_id" name="training_type_id"
                                     class="mt-1 block w-full dark:bg-gray-700">
                                     @foreach ($trainingTypes as $type)
@@ -32,19 +30,19 @@
                             </div>
 
                             <div>
-                                <x-label for="date" value="{{ __('Datum') }}" />
+                                <x-label for="date" value="{{ __('Date') }}" />
                                 <x-input type="date" id="date" name="date" class="mt-1 block w-full"
                                     min="{{ date('Y-m-d', strtotime('+1 day')) }}" required />
                             </div>
                         </div>
 
                         <div class="mt-6">
-                            <x-label value="{{ __('Välj spelare') }}" class="mb-2" />
+                            <x-label value="{{ __('Select players') }}" class="mb-2" />
                             <div class="mb-4">
                                 <label class="flex items-center">
                                     <input type="checkbox" id="select-all"
                                         class="rounded dark:bg-gray-700 border-gray-300 dark:border-gray-600">
-                                    <span class="ml-2 text-sm">{{ __('Markera/avmarkera alla') }}</span>
+                                    <span class="ml-2 text-sm">{{ __('Mark/unmark all') }}</span>
                                 </label>
                             </div>
 
@@ -72,7 +70,7 @@
 
                         <div class="mt-6">
                             <x-button>
-                                {{ __('Schemalägg träning') }}
+                                {{ __('Schedule training') }}
                             </x-button>
                         </div>
                     </form>
@@ -81,7 +79,7 @@
                 <!-- Lista schemalagda träningar -->
                 <div>
                     <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-                        {{ __('Schemalagda träningar') }}
+                        {{ __('Scheduled trainings') }}
                     </h3>
 
                     <div class="overflow-x-auto">
@@ -89,13 +87,13 @@
                             <thead>
                                 <tr>
                                     <th class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left">
-                                        {{ __('Datum') }}
+                                        {{ __('Date') }}
                                     </th>
                                     <th class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left">
-                                        {{ __('Typ') }}
+                                        {{ __('Type') }}
                                     </th>
                                     <th class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left">
-                                        {{ __('Spelare') }}
+                                        {{ __('Players') }}
                                     </th>
                                     <th class="px-6 py-3 bg-gray-50 dark:bg-gray-700 text-left">
                                         {{ __('Status') }}
@@ -129,7 +127,7 @@
                                     <tr>
                                         <td colspan="4"
                                             class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
-                                            {{ __('Inga träningar schemalagda') }}
+                                            {{ __('No trainings scheduled') }}
                                         </td>
                                     </tr>
                                 @endforelse

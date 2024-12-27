@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Mina transferlistade spelare') }}
+            {{ __('My listed players') }}
         </h2>
     </x-slot>
 
@@ -14,16 +14,16 @@
                             <tr>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Spelare</th>
+                                    {{ __('Player') }}</th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Utgångspris</th>
+                                    {{ __('Asking price') }}</th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Bud</th>
+                                    {{ __('Bid') }}</th>
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                    Åtgärder</th>
+                                    {{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -44,29 +44,30 @@
                                                 <div class="mt-2 flex space-x-2">
                                                     <x-primary-button onclick="acceptOffer({{ $offer->id }})"
                                                         class="px-2 py-1 text-xs">
-                                                        Acceptera
+                                                        {{ __('Accept') }}
                                                     </x-primary-button>
                                                     <x-secondary-button onclick="rejectOffer({{ $offer->id }})"
                                                         class="px-2 py-1 text-xs">
-                                                        Avböj
+                                                        {{ __('Reject') }}
                                                     </x-secondary-button>
                                                 </div>
                                             </div>
                                         @empty
-                                            <span class="text-gray-500 dark:text-gray-400">Inga aktiva bud</span>
+                                            <span
+                                                class="text-gray-500 dark:text-gray-400">{{ __('No active bids') }}</span>
                                         @endforelse
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <x-secondary-button onclick="cancelListing({{ $listing->id }})"
                                             class="text-sm">
-                                            Avbryt listing
+                                            {{ __('Cancel listing') }}
                                         </x-secondary-button>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
                                     <td colspan="4" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
-                                        Du har inga transferlistade spelare
+                                        {{ __('You have no listed players') }}
                                     </td>
                                 </tr>
                             @endforelse
@@ -80,7 +81,7 @@
     @push('scripts')
         <script>
             async function acceptOffer(offerId) {
-                if (!confirm('Är du säker på att du vill acceptera detta bud?')) return;
+                if (!confirm('{{ __('Are you sure you want to accept this bid?') }}')) return;
 
                 try {
                     const response = await fetch(`/transfer-market/offers/${offerId}/accept`, {
@@ -95,16 +96,16 @@
                     if (data.success) {
                         window.location.reload();
                     } else {
-                        alert(data.message || 'Ett fel uppstod');
+                        alert(data.message || '{{ __('An error occurred while accepting the bid.') }}');
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    alert('Ett fel uppstod');
+                    alert('{{ __('An error occurred while accepting the bid.') }}');
                 }
             }
 
             async function rejectOffer(offerId) {
-                if (!confirm('Är du säker på att du vill avböja detta bud?')) return;
+                if (!confirm('{{ __('Are you sure you want to reject this bid?') }}')) return;
 
                 try {
                     const response = await fetch(`/transfer-market/offers/${offerId}/reject`, {
@@ -119,16 +120,16 @@
                     if (data.success) {
                         window.location.reload();
                     } else {
-                        alert(data.message || 'Ett fel uppstod');
+                        alert(data.message || '{{ __('An error occurred while rejecting the bid.') }}');
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    alert('Ett fel uppstod');
+                    alert('{{ __('An error occurred while rejecting the bid.') }}');
                 }
             }
 
             async function cancelListing(listingId) {
-                if (!confirm('Är du säker på att du vill avbryta denna listing?')) return;
+                if (!confirm('{{ __('Are you sure you want to cancel this listing?') }}')) return;
 
                 try {
                     const response = await fetch(`/transfer-market/listings/${listingId}/cancel`, {
@@ -143,11 +144,11 @@
                     if (data.success) {
                         window.location.reload();
                     } else {
-                        alert(data.message || 'Ett fel uppstod');
+                        alert(data.message || '{{ __('An error occurred while canceling the listing.') }}');
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    alert('Ett fel uppstod');
+                    alert('{{ __('An error occurred while canceling the listing.') }}');
                 }
             }
         </script>

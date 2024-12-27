@@ -12,19 +12,19 @@
                             <h3 class="text-lg font-semibold mb-4">
                                 @switch($position)
                                     @case('GK')
-                                        Målvakter
+                                        {{ __('Goalkeepers') }}
                                     @break
 
                                     @case('DEF')
-                                        Försvarare
+                                        {{ __('Defenders') }}
                                     @break
 
                                     @case('MID')
-                                        Mittfältare
+                                        {{ __('Midfielders') }}
                                     @break
 
                                     @case('FWD')
-                                        Anfallare
+                                        {{ __('Strikers') }}
                                     @break
                                 @endswitch
                             </h3>
@@ -33,10 +33,10 @@
                                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                     <thead>
                                         <tr>
-                                            <th class="px-4 py-2 text-left">Namn</th>
-                                            <th class="px-4 py-2 text-left">Ålder</th>
+                                            <th class="px-4 py-2 text-left">{{ __('Name') }}</th>
+                                            <th class="px-4 py-2 text-left">{{ __('Age') }}</th>
                                             @if ($isOwnClub)
-                                                <th class="px-4 py-2 text-left">Form</th>
+                                                <th class="px-4 py-2 text-left">{{ __('Form') }}</th>
                                                 @foreach (['strength', 'stamina', 'speed', 'technique', 'passing'] as $attribute)
                                                     <th class="px-4 py-2 text-center">
                                                         {{ ucfirst($attribute) }}
@@ -45,15 +45,15 @@
                                                 <th class="px-4 py-2 text-center">
                                                     {{ $position === 'GK' ? 'Målvakt' : ($position === 'DEF' ? 'Försvar' : ($position === 'MID' ? 'Mittfält' : 'Anfall')) }}
                                                 </th>
-                                                <th class="px-4 py-2 text-right">Lön</th>
-                                                <th class="px-4 py-2 text-right">Kontrakt till</th>
+                                                <th class="px-4 py-2 text-right">{{ __('Salary') }}</th>
+                                                <th class="px-4 py-2 text-right">{{ __('Contract until') }}</th>
                                             @else
-                                                <th class="px-4 py-2 text-center">Fysik</th>
-                                                <th class="px-4 py-2 text-center">Teknik</th>
+                                                <th class="px-4 py-2 text-center">{{ __('Physical') }}</th>
+                                                <th class="px-4 py-2 text-center">{{ __('Technical') }}</th>
                                                 <th class="px-4 py-2 text-center">
-                                                    {{ $position === 'GK' ? 'Målvakt' : ($position === 'DEF' ? 'Försvar' : ($position === 'MID' ? 'Mittfält' : 'Anfall')) }}
+                                                    {{ $position === 'GK' ? __('Goalkeeper') : ($position === 'DEF' ? __('Defender') : ($position === 'MID' ? __('Midfielder') : __('Striker'))) }}
                                                 </th>
-                                                <th class="px-4 py-2 text-right">Kontrakt till</th>
+                                                <th class="px-4 py-2 text-right">{{ __('Contract until') }}</th>
                                             @endif
                                         </tr>
                                     </thead>
@@ -68,7 +68,7 @@
                                                     @if ($player->transferListing)
                                                         <span
                                                             class="ml-2 px-2 py-0.5 text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100 rounded-full">
-                                                            Till salu:
+                                                            {{ __('For sale:') }}
                                                             {{ number_format($player->transferListing->asking_price) }}
                                                             kr
                                                         </span>
@@ -78,7 +78,8 @@
                                                 @if ($isOwnClub)
                                                     <td class="px-4 py-2">{{ $player->form }}</td>
                                                     @foreach (['strength', 'stamina', 'speed', 'technique', 'passing'] as $attribute)
-                                                        <td class="px-4 py-2 text-center">{{ $player->$attribute }}</td>
+                                                        <td class="px-4 py-2 text-center">{{ $player->$attribute }}
+                                                        </td>
                                                     @endforeach
                                                     <td class="px-4 py-2 text-center">
                                                         {{ $player->{strtolower($position === 'GK' ? 'goalkeeper' : ($position === 'DEF' ? 'defense' : ($position === 'MID' ? 'midfield' : 'striker')))} }}
@@ -90,35 +91,35 @@
                                                                 <button
                                                                     onclick="negotiateContract({{ $player->id }})"
                                                                     class="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">
-                                                                    Förhandla
+                                                                    {{ __('Negotiate') }}
                                                                 </button>
                                                                 <button
                                                                     onclick="terminateContract({{ $player->activeContract->id }})"
                                                                     class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">
-                                                                    Bryt kontrakt
+                                                                    {{ __('Terminate contract') }}
                                                                 </button>
                                                                 @if ($player->transferListing)
                                                                     <button
                                                                         onclick="cancelTransferListing({{ $player->transferListing->id }})"
                                                                         class="text-xs bg-gray-500 text-white px-2 py-1 rounded hover:bg-gray-600">
-                                                                        Avbryt listning
+                                                                        {{ __('Cancel listing') }}
                                                                     </button>
                                                                 @else
                                                                     <button x-data
                                                                         @click="$dispatch('open-modal', 'list-player-modal'); window.currentPlayerId = {{ $player->id }}"
                                                                         class="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">
-                                                                        Lista för transfer
+                                                                        {{ __('List for transfer') }}
                                                                     </button>
                                                                 @endif
                                                             </div>
                                                         @else
-                                                            <span class="text-red-600 dark:text-red-400">Inget aktivt
-                                                                kontrakt</span>
+                                                            <span
+                                                                class="text-red-600 dark:text-red-400">{{ __('No active contract') }}</span>
                                                             <div class="mt-1 flex gap-2 justify-end">
                                                                 <button
                                                                     onclick="negotiateContract({{ $player->id }})"
                                                                     class="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">
-                                                                    Förhandla
+                                                                    {{ __('Negotiate') }}
                                                                 </button>
                                                             </div>
                                                         @endif
@@ -219,29 +220,30 @@
     <div id="negotiateModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800">
             <div class="mt-3">
-                <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">Förhandla nytt kontrakt</h3>
+                <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
+                    {{ __('Negotiate new contract') }}</h3>
                 <div class="mt-2">
                     <form id="negotiateForm" class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Lön per
-                                månad</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Salary per month') }}</label>
                             <input type="number" name="salary" id="salary" min="1000"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kontraktslängd
-                                (månader)</label>
+                            <label
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Contract length (months)') }}</label>
                             <input type="number" name="duration" id="duration" min="1" max="60"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                         </div>
                         <div class="flex justify-end gap-3">
                             <button type="button" onclick="closeNegotiateModal()"
                                 class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
-                                Avbryt
+                                {{ __('Cancel') }}
                             </button>
                             <button type="submit"
                                 class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-                                Förhandla
+                                {{ __('Negotiate') }}
                             </button>
                         </div>
                     </form>
@@ -254,22 +256,22 @@
         <form class="p-6" id="listPlayerForm">
             @csrf
             <h2 class="text-lg font-medium text-gray-900 mb-4">
-                Lista spelare för transfer
+                {{ __('List player for transfer') }}
             </h2>
 
             <div class="mb-4">
-                <x-input-label for="asking_price" value="Utgångspris (kr)" />
+                <x-input-label for="asking_price" value="{{ __('Asking price (kr)') }}" />
                 <x-text-input id="asking_price" type="number" name="asking_price" class="mt-1 block w-full" required
                     min="1000" />
-                <p class="mt-2 text-sm text-gray-500">Minimum 1000 kr</p>
+                <p class="mt-2 text-sm text-gray-500">{{ __('Minimum 1000 kr') }}</p>
             </div>
 
             <div class="mt-6 flex justify-end">
                 <x-secondary-button @click="$dispatch('close')" class="mr-3">
-                    Avbryt
+                    {{ __('Cancel') }}
                 </x-secondary-button>
                 <x-primary-button type="submit">
-                    Lista spelare
+                    {{ __('List player') }}
                 </x-primary-button>
             </div>
         </form>
@@ -292,7 +294,7 @@
             }
 
             function terminateContract(contractId) {
-                if (confirm('Är du säker på att du vill bryta kontraktet? Detta kommer kosta klubben pengar.')) {
+                if (confirm('{{ __('Are you sure you want to terminate the contract? This will cost the club money.') }}')) {
                     fetch(`/contracts/${contractId}/terminate`, {
                             method: 'POST',
                             headers: {
@@ -306,12 +308,12 @@
                             if (data.success) {
                                 window.location.reload();
                             } else {
-                                alert(data.message || 'Ett fel uppstod');
+                                alert(data.message || '{{ __('An error occurred') }}');
                             }
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            alert('Ett fel uppstod');
+                            alert('{{ __('An error occurred') }}');
                         });
                 }
             }
@@ -356,7 +358,6 @@
                     });
             });
 
-            // Stäng modal om man klickar utanför
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
                     closeNegotiateModal();
@@ -391,12 +392,12 @@
                         alert(data.message);
                     }
                 } catch (error) {
-                    alert('Ett fel uppstod vid listning av spelaren.');
+                    alert('{{ __('An error occurred while listing the player.') }}');
                 }
             });
 
             function cancelTransferListing(listingId) {
-                if (confirm('Är du säker på att du vill ta bort spelaren från transfermarknaden?')) {
+                if (confirm('{{ __('Are you sure you want to remove the player from the transfer market?') }}')) {
                     fetch(`/transfer-market/listings/${listingId}/cancel`, {
                             method: 'POST',
                             headers: {
@@ -410,12 +411,12 @@
                             if (data.success) {
                                 window.location.reload();
                             } else {
-                                alert(data.message || 'Ett fel uppstod');
+                                alert(data.message || '{{ __('An error occurred') }}');
                             }
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            alert('Ett fel uppstod');
+                            alert('{{ __('An error occurred') }}');
                         });
                 }
             }
