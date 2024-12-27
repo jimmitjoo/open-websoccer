@@ -1,4 +1,4 @@
-@props(['name', 'show' => false, 'maxWidth' => '2xl'])
+@props(['name' => 'modal', 'show' => false, 'maxWidth' => '2xl'])
 
 @php
     $maxWidth = [

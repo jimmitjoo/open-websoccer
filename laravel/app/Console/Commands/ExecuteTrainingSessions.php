@@ -27,7 +27,7 @@ class ExecuteTrainingSessions extends Command
         try {
             $sessions = TrainingSession::query()
                 ->where('status', 'scheduled')
-                ->where('scheduled_date', now()->toDateString())
+                ->where('scheduled_date', '<=', now()->toDateString())
                 ->with(['trainingType', 'players', 'club'])
                 ->get();
 
@@ -54,9 +54,9 @@ class ExecuteTrainingSessions extends Command
             Log::error('Fel vid körning av träningspass: ' . $e->getMessage(), [
                 'exception' => $e
             ]);
-            
+
             $this->error('Ett fel uppstod: ' . $e->getMessage());
             return self::FAILURE;
         }
     }
-} 
+}
