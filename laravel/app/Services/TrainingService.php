@@ -83,10 +83,8 @@ class TrainingService
         }
 
         // Uppdatera spelarens form baserat på träningseffekterna
-        $maxMin = $player->form;
-        $formChange = rand(max(-50, $maxMin), 50);
-        $player->form = min(100, $player->form + $formChange);
-
+        $formChange = rand(-5, 15);  // Mer balanserad formförändring
+        $player->form = min(100, max(1, $player->form + $formChange));
         $player->save();
     }
 

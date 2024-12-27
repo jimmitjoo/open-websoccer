@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Club;
 use App\Models\Season;
 use App\Models\Game;
+use App\Models\YouthPlayer;
 use App\Models\TransferHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -23,6 +24,21 @@ class ClubController extends Controller
         Gate::authorize('becomeManager', $club);
 
         $club->update(['user_id' => auth()->id()]);
+    }
+
+    public function youthAcademy(Club $club)
+    {
+        $isOwnClub = auth()->user()?->club?->id === $club->id;
+
+        return view('clubs.youth-academy', compact('club', 'isOwnClub'));
+    }
+
+    public function youthAcademyPlayer(Club $club, YouthPlayer $player)
+    {
+        Gate::authorize('show', $player);
+
+        $isOwnClub = auth()->user()?->club?->id === $club->id;
+        return view('clubs.youth-academy-player', compact('club', 'player', 'isOwnClub'));
     }
 
     public function clubhouse()

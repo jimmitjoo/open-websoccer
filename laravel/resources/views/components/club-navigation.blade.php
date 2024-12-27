@@ -14,26 +14,24 @@
         @endif
     </div>
 
-    <nav class="-mb-px flex space-x-8">
-        <a href="{{ route('clubs.show', $club) }}" @class([
-            'border-b-2 py-4 px-1 text-sm font-medium',
-            'border-indigo-500 text-indigo-600 dark:text-indigo-400' =>
-                $currentPage === 'overview',
-            'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300' =>
-                $currentPage !== 'overview',
-        ])>
+    <nav class="space-y-1">
+        <x-nav-link :href="route('clubs.show', $club)" :active="request()->routeIs('clubs.show')">
             {{ __('Overview') }}
-        </a>
+        </x-nav-link>
 
-        <a href="{{ route('clubs.squad', $club) }}" @class([
-            'border-b-2 py-4 px-1 text-sm font-medium',
-            'border-indigo-500 text-indigo-600 dark:text-indigo-400' =>
-                $currentPage === 'squad',
-            'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300' =>
-                $currentPage !== 'squad',
-        ])>
+        <x-nav-link :href="route('clubs.squad', $club)" :active="request()->routeIs('clubs.squad')">
             {{ __('Squad') }}
-        </a>
+        </x-nav-link>
+
+        <x-nav-link :href="route('youth-academy.overview', $club)" :active="request()->routeIs('youth-academy.*')">
+            {{ __('Youth academy') }}
+            @if ($club->youthAcademy?->hasAvailableYouthPlayer())
+                <span
+                    class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    {{ __('New player') }}
+                </span>
+            @endif
+        </x-nav-link>
 
         @if ($isOwnClub)
             <a href="{{ route('training.index') }}" @class([

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Services\PlayerGenerationService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Club extends Model
 {
@@ -127,6 +128,11 @@ class Club extends Model
     public function getBudgetAttribute(): float
     {
         return $this->balance + $this->income - $this->expenses;
+    }
+
+    public function youthAcademy(): HasOne
+    {
+        return $this->hasOne(YouthAcademy::class);
     }
 
     protected static function booted()

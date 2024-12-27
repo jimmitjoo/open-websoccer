@@ -14,14 +14,6 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->call([
-            InjuryTypeSeeder::class,
-            TrainingTypeSeeder::class,
-            ManagerSeeder::class,
-        ]);
-
-
-
         // Skapa säsong
         $season = Season::create([
             'name' => '2024-4',
@@ -391,5 +383,15 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+
+        $this->call([
+            InjuryTypeSeeder::class,
+            TrainingTypeSeeder::class,
+            ManagerSeeder::class,
+            YouthAcademyLevelSeeder::class,
+            YouthAcademySeeder::class,
+            YouthPlayerSeeder::class,
+            YouthPlayerDevelopmentLogSeeder::class,
+        ]);
     }
 }

@@ -20,4 +20,15 @@ export default {
     },
 
     plugins: [forms, typography],
+
+    safelist: [
+        {
+            pattern: /bg-(red|green|yellow|blue)-(100|900)/,
+            variants: ['dark'],
+        },
+        {
+            pattern: /text-(red|green|yellow|blue)-(200|800)/,
+            variants: ['dark'],
+        },
+    ],
 };

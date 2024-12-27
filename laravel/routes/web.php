@@ -130,3 +130,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/players/{player}/adjust-form', \App\Livewire\Admin\FormAdjustment::class)
         ->name('admin.players.adjust-form');
 });
+
+// Ungdomsakademi routes
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/clubs/{club}/youth-academy', [ClubController::class, 'youthAcademy'])
+        ->name('youth-academy.overview');
+
+    Route::get('/clubs/{club}/youth-academy/players/{player}', [ClubController::class, 'youthAcademyPlayer'])
+        ->name('youth-academy.player.show');
+});
