@@ -122,3 +122,48 @@ it('decreases matches_played_recently over time', function () {
 
     expect($this->player->fresh()->matches_played_recently)->toBe(2);
 });
+
+it('decreases form naturally over time even with neutral trend', function () {
+    $this->player->update([
+        'form' => 70,
+        'form_trend' => 0.0,
+        'last_form_update' => now()->subDays(1)
+    ]);
+
+    $formService = app(FormService::class);
+    $oldForm = $this->player->form;
+
+    $formService->updateDailyForm($this->player);
+
+    expect($this->player->fresh())
+        ->form->toBeLessThan($oldForm);
+});
+
+it('properly converts player ratings to form changes', function () {
+    $game = Game::factory()->create();
+    $formService = app(FormService::class);
+
+    // Test med olika ratings
+    $testCases = [
+        ['rating' => 4.0, 'shouldDecrease' => true],
+        ['rating' => 6.0, 'shouldStayNeutral' => true],
+        ['rating' => 8.0, 'shouldIncrease' => true],
+    ];
+
+    foreach ($testCases as $case) {
+        $this->player->update(['form' => 60, 'form_trend' => 0.0]);
+        $oldForm = $this->player->form;
+
+        $formService->calculateMatchImpact($this->player, $game, $case['rating']);
+        $newForm = $this->player->fresh()->form;
+
+        if (isset($case['shouldDecrease'])) {
+            expect($newForm)->toBeLessThan($oldForm);
+        } elseif (isset($case['shouldStayNeutral'])) {
+            // För neutral form, tillåt en liten variation på +/- 2
+            expect($newForm)->toBeBetween($oldForm - 2, $oldForm + 2);
+        } else {
+            expect($newForm)->toBeGreaterThan($oldForm);
+        }
+    }
+});

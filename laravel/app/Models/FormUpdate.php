@@ -6,24 +6,31 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+
 class FormUpdate extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['player_id', 'old_value', 'new_value', 'adjusted_by', 'reason'];
+    protected $fillable = [
+        'player_id',
+        'old_value',
+        'new_value',
+        'reason',
+        'adjusted_by',
+    ];
 
     public function player(): BelongsTo
     {
         return $this->belongsTo(Player::class);
     }
 
-    public function getFormChange(): int
+    public function adjuster(): BelongsTo
     {
-        return $this->new_value - $this->old_value;
+        return $this->belongsTo(User::class, 'adjusted_by');
     }
 
-    public function getFormChangePercentage(): float
+    public function game(): BelongsTo
     {
-        return ($this->new_value - $this->old_value) / $this->old_value * 100;
+        return $this->belongsTo(Game::class);
     }
 }

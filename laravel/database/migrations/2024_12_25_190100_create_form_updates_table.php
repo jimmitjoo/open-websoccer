@@ -15,6 +15,7 @@ return new class extends Migration
             $table->integer('new_value');
             $table->string('reason')->nullable();
             $table->foreignId('adjusted_by')->nullable()->constrained('users');
+            $table->foreignId('match_id')->nullable()->constrained('matches');
             $table->timestamps();
         });
     }

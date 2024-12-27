@@ -22,6 +22,8 @@ class FormService
     public function calculateMatchImpact(Player $player, Game $game, float $rating): void
     {
         DB::transaction(function () use ($player, $game, $rating) {
+            $oldForm = $player->form;
+
             // Uppdatera antalet spelade matcher nyligen
             $player->matches_played_recently = min(
                 self::RECENT_MATCHES_COUNT,
@@ -29,10 +31,10 @@ class FormService
             );
 
             // Konvertera rating (1-10) till formskala (1-100)
-            $ratingInFormScale = $rating * 10;
+            // En rating på 6.0 ska motsvara neutral form (60)
+            $ratingInFormScale = ($rating - 6.0) * 20 + 60;
 
             // Beräkna formtrend baserat på matchbetyg
-            // Rating 60 är neutral, över det positiv trend, under negativt
             $trendImpact = ($ratingInFormScale - 60) / 10;
             $player->form_trend = $this->calculateNewTrend($player->form_trend, $trendImpact);
 
@@ -41,13 +43,22 @@ class FormService
             $player->form = $this->adjustForm($player->form + $formChange);
 
             $player->last_form_update = now();
+
+            // Spara form_update
+            $player->formUpdates()->create([
+                'old_value' => $oldForm,
+                'new_value' => $player->form,
+                'match_id' => $game->id,
+                'reason' => "Match performance: Rating {$rating}"
+            ]);
+
             $player->save();
 
             Log::info('Spelarform uppdaterad efter match', [
                 'player_id' => $player->id,
                 'match_id' => $game->id,
                 'rating' => $rating,
-                'old_form' => $player->form - $formChange,
+                'old_form' => $oldForm,
                 'new_form' => $player->form,
                 'trend' => $player->form_trend
             ]);
@@ -57,11 +68,16 @@ class FormService
     public function updateDailyForm(Player $player): void
     {
         DB::transaction(function () use ($player) {
+            $oldForm = $player->form;
+
             // Minska trendeffekten över tid
             $player->form_trend *= 0.9;
 
-            // Applicera en mindre formförändring baserad på trenden
-            $formChange = (int) round($this->calculateFormChange($player->form_trend, $player->matches_played_recently) * 0.5);
+            // Lägg till en naturlig formförsämring
+            $naturalDecay = -1; // -1 poäng per dag
+
+            // Applicera en mindre formförändring baserad på trenden plus naturlig försämring
+            $formChange = (int) round($this->calculateFormChange($player->form_trend, $player->matches_played_recently) * 0.5) + $naturalDecay;
             $player->form = $this->adjustForm($player->form + $formChange);
 
             // Minska antalet nyligen spelade matcher över tid
@@ -70,6 +86,16 @@ class FormService
             }
 
             $player->last_form_update = now();
+
+            // Spara form_update om formen ändrades
+            if ($oldForm !== $player->form) {
+                $player->formUpdates()->create([
+                    'old_value' => $oldForm,
+                    'new_value' => $player->form,
+                    'reason' => 'Daily form update'
+                ]);
+            }
+
             $player->save();
         });
     }

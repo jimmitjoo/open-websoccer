@@ -14,7 +14,7 @@
         @endif
     </div>
 
-    <nav class="space-y-1">
+    <nav class="space-y-2 space-x-2">
         <x-nav-link :href="route('clubs.show', $club)" :active="request()->routeIs('clubs.show')">
             {{ __('Overview') }}
         </x-nav-link>
@@ -34,47 +34,23 @@
         </x-nav-link>
 
         @if ($isOwnClub)
-            <a href="{{ route('training.index') }}" @class([
-                'border-b-2 py-4 px-1 text-sm font-medium',
-                'border-indigo-500 text-indigo-600 dark:text-indigo-400' =>
-                    $currentPage === 'training',
-                'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300' =>
-                    $currentPage !== 'training',
-            ])>
+            <x-nav-link :href="route('training.index')" :active="request()->routeIs('training.index')">
                 {{ __('Training') }}
-            </a>
+            </x-nav-link>
         @endif
 
-        <a href="{{ route('clubs.matches', $club) }}" @class([
-            'border-b-2 py-4 px-1 text-sm font-medium',
-            'border-indigo-500 text-indigo-600 dark:text-indigo-400' =>
-                $currentPage === 'matches',
-            'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300' =>
-                $currentPage !== 'matches',
-        ])>
+        <x-nav-link :href="route('clubs.matches', $club)" :active="request()->routeIs('clubs.matches')">
             {{ __('Matches') }}
-        </a>
+        </x-nav-link>
 
         @if ($isOwnClub)
-            <a href="{{ route('clubhouse') }}" @class([
-                'border-b-2 py-4 px-1 text-sm font-medium',
-                'border-indigo-500 text-indigo-600 dark:text-indigo-400' =>
-                    $currentPage === 'clubhouse',
-                'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300' =>
-                    $currentPage !== 'clubhouse',
-            ])>
+            <x-nav-link :href="route('clubhouse')" :active="request()->routeIs('clubhouse')">
                 {{ __('Clubhouse') }}
-            </a>
+            </x-nav-link>
 
-            <a href="{{ route('club.finance') }}" @class([
-                'border-b-2 py-4 px-1 text-sm font-medium',
-                'border-indigo-500 text-indigo-600 dark:text-indigo-400' =>
-                    $currentPage === 'finance',
-                'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300' =>
-                    $currentPage !== 'finance',
-            ])>
+            <x-nav-link :href="route('club.finance')" :active="request()->routeIs('club.finance')">
                 {{ __('Finance') }}
-            </a>
+            </x-nav-link>
         @endif
     </nav>
 </div>
